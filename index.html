@@ -1,0 +1,1930 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Física UNED · Mapa del grado</title>
+<meta name="description" content="Plataforma personal de estudio del Grado en Física de la UNED: temas interactivos, repaso espaciado y seguimiento de progreso.">
+<meta name="theme-color" content="#0a1210">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Física UNED">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Literata:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* ==========================================================================
+   Física UNED — sistema de diseño compartido
+   Estética: panel de instrumentación / osciloscopio de laboratorio
+   ========================================================================== */
+
+:root{
+  --bg:#eef2f0;
+  --bg-elev:#ffffff;
+  --bg-sunken:#e2eae6;
+  --ink:#16241f;
+  --ink-dim:#4b6058;
+  --accent:#0e8a72;
+  --accent-soft:#d9efe9;
+  --accent-2:#b5720a;
+  --accent-2-soft:#f5e6cc;
+  --line:#c9d6d1;
+  --grid:#dbe5e1;
+  --bad:#b1352b;
+  --bad-soft:#f6dcda;
+  --good:#0e8a72;
+  --shadow:0 8px 24px rgba(20,40,35,0.10);
+  --scope-bg:#0a1210;
+  --radius:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1210;
+    --bg-elev:#101c19;
+    --bg-sunken:#0d1815;
+    --ink:#e7f3ee;
+    --ink-dim:#93a8a0;
+    --accent:#3ddc97;
+    --accent-soft:#123227;
+    --accent-2:#ffb454;
+    --accent-2-soft:#2b2213;
+    --line:#1f2f2a;
+    --grid:#16211d;
+    --bad:#ff8686;
+    --bad-soft:#2c1414;
+    --good:#3ddc97;
+    --shadow:0 8px 28px rgba(0,0,0,0.45);
+    --scope-bg:#050b09;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1210;
+  --bg-elev:#101c19;
+  --bg-sunken:#0d1815;
+  --ink:#e7f3ee;
+  --ink-dim:#93a8a0;
+  --accent:#3ddc97;
+  --accent-soft:#123227;
+  --accent-2:#ffb454;
+  --accent-2-soft:#2b2213;
+  --line:#1f2f2a;
+  --grid:#16211d;
+  --bad:#ff8686;
+  --bad-soft:#2c1414;
+  --good:#3ddc97;
+  --shadow:0 8px 28px rgba(0,0,0,0.45);
+  --scope-bg:#050b09;
+}
+
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Literata', Georgia, 'Times New Roman', serif;
+  line-height:1.6;
+  min-height:100vh;
+  overscroll-behavior-y:none;
+}
+img{ max-width:100%; }
+[hidden]{ display:none !important; }
+::selection{ background:var(--accent); color:var(--bg-elev); }
+
+h1,h2,h3,.display{
+  font-family:'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  text-wrap:balance;
+  font-weight:800;
+  margin:0;
+}
+p{ margin:0 0 14px; }
+a{ color:var(--accent); }
+.mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+code, .formula{
+  font-family:'JetBrains Mono', ui-monospace, monospace;
+  background:var(--bg-sunken);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:0.05em 0.4em;
+  font-size:0.92em;
+  font-variant-numeric:tabular-nums;
+}
+.eyebrow{
+  font-family:'JetBrains Mono', monospace;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  font-size:0.72rem;
+  color:var(--accent);
+  font-weight:700;
+}
+.muted{ color:var(--ink-dim); }
+.center{ text-align:center; }
+
+/* ===== Contenedores ===== */
+.wrap{ max-width:1000px; margin:0 auto; padding:0 20px 100px; }
+.wrap.narrow{ max-width:880px; }
+.wrap.tight{ max-width:520px; }
+section + section{ margin-top:38px; }
+
+/* ===== Barra superior compartida ===== */
+.appbar{
+  position:sticky; top:0; z-index:60;
+  background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.appbar-inner{
+  max-width:1000px; margin:0 auto; padding:10px 20px;
+  display:flex; align-items:center; gap:16px;
+}
+.brand{
+  font-family:'Big Shoulders Display',sans-serif; font-weight:800; font-size:1.1rem;
+  letter-spacing:0.02em; white-space:nowrap; text-decoration:none; color:var(--ink);
+  display:flex; align-items:center; gap:8px;
+}
+.brand .spark{ color:var(--accent); }
+.appbar nav{ display:flex; gap:14px; align-items:center; margin-left:6px; }
+.appbar nav a{
+  font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-transform:uppercase;
+  letter-spacing:0.06em; text-decoration:none; color:var(--ink-dim); padding:4px 0;
+  border-bottom:2px solid transparent;
+}
+.appbar nav a:hover{ color:var(--ink); }
+.appbar nav a[aria-current="page"]{ color:var(--accent); border-bottom-color:var(--accent); }
+.appbar .spacer{ margin-left:auto; }
+
+.userchip{
+  display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);
+  border:1px solid var(--line); border-radius:22px; padding:5px 12px 5px 6px; background:var(--bg-elev);
+}
+.userchip .avatar{
+  width:26px; height:26px; border-radius:50%; background:var(--accent); color:var(--scope-bg);
+  display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace;
+  font-weight:700; font-size:0.75rem; flex:none;
+}
+.userchip .meta{ display:flex; flex-direction:column; line-height:1.15; }
+.userchip .meta .n{ font-family:'JetBrains Mono',monospace; font-size:0.7rem; font-weight:700; }
+.userchip .meta .x{ font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--ink-dim); }
+@media (max-width:640px){
+  .appbar nav{ display:none; }
+  .userchip .meta{ display:none; }
+}
+
+/* ===== Botones ===== */
+.btn{
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.82rem;
+  letter-spacing:0.03em; text-transform:uppercase; border-radius:8px; border:1px solid var(--line);
+  padding:11px 18px; cursor:pointer; background:var(--bg-elev); color:var(--ink);
+  transition:transform .15s ease, border-color .15s ease; text-decoration:none; display:inline-block;
+  text-align:center;
+}
+.btn:hover{ transform:translateY(-1px); border-color:var(--accent); }
+.btn:active{ transform:translateY(0); }
+.btn.primary{ background:var(--accent); color:var(--scope-bg); border-color:var(--accent); }
+.btn.ghost{ background:transparent; }
+.btn.danger{ color:var(--bad); border-color:var(--bad); }
+.btn.small{ padding:7px 12px; font-size:0.7rem; }
+.btn:disabled{ opacity:0.45; cursor:not-allowed; transform:none; }
+.btn-row{ display:flex; gap:12px; flex-wrap:wrap; }
+
+/* ===== Formularios ===== */
+.field{ display:flex; flex-direction:column; gap:6px; }
+label{
+  font-family:'JetBrains Mono',monospace; font-size:0.68rem; text-transform:uppercase;
+  letter-spacing:0.06em; color:var(--ink-dim); display:flex; justify-content:space-between;
+}
+label b{ color:var(--ink); font-variant-numeric:tabular-nums; }
+input[type=email], input[type=password], input[type=text], select, textarea{
+  font-family:'JetBrains Mono',monospace; background:var(--bg-elev); color:var(--ink);
+  border:1px solid var(--line); border-radius:8px; padding:11px 12px; font-size:0.9rem; width:100%;
+}
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible{
+  outline:2px solid var(--accent); outline-offset:2px;
+}
+input[type=range]{ width:100%; accent-color:var(--accent); }
+
+/* ===== Tarjetas / paneles ===== */
+.card{
+  background:var(--bg-elev); border:1px solid var(--line); border-radius:var(--radius);
+  padding:20px; box-shadow:var(--shadow);
+}
+.panel{
+  background:var(--bg-elev); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; box-shadow:var(--shadow);
+}
+.panel-head{
+  display:flex; align-items:center; gap:14px; padding:16px 20px;
+  border-bottom:1px solid var(--line); background:var(--bg-sunken);
+}
+.panel-head h2{ font-size:1.25rem; }
+.panel-body{ padding:20px; }
+
+.callout{
+  background:var(--accent-2-soft); border:1px solid var(--accent-2); border-radius:8px;
+  padding:12px 14px; font-size:0.92rem; margin:14px 0;
+}
+.callout .eyebrow{ color:var(--accent-2); }
+.notice{
+  background:var(--accent-soft); border:1px solid var(--accent); border-radius:8px;
+  padding:12px 14px; font-size:0.9rem; color:var(--ink);
+}
+.notice.error{ background:var(--bad-soft); border-color:var(--bad); }
+
+/* ===== Barras de progreso ===== */
+.bar-track{ height:8px; border-radius:5px; background:var(--bg-sunken); border:1px solid var(--line); overflow:hidden; }
+.bar-fill{ height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); width:0%; transition:width .5s ease; }
+
+.ring{ position:relative; flex:none; }
+.ring svg{ transform:rotate(-90deg); display:block; }
+.ring .ring-label{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.9rem;
+}
+
+/* ===== Estadísticas ===== */
+.stat-row{ display:flex; flex-wrap:wrap; gap:10px 28px; }
+.stat{ font-family:'JetBrains Mono',monospace; }
+.stat .k{ display:block; font-size:0.63rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-dim); }
+.stat .v{ font-size:1.15rem; font-weight:700; font-variant-numeric:tabular-nums; }
+.stat .v.good{ color:var(--good); }
+.stat .v.bad{ color:var(--bad); }
+.stat .v.warn{ color:var(--accent-2); }
+
+/* ===== Tablas ===== */
+.table-scroll{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:0.86rem; }
+th{
+  font-family:'JetBrains Mono',monospace; font-size:0.64rem; text-transform:uppercase;
+  letter-spacing:0.07em; color:var(--ink-dim); text-align:left; padding:10px 12px;
+  border-bottom:1px solid var(--line); white-space:nowrap; font-weight:700;
+}
+td{ padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:middle; }
+tbody tr:hover{ background:var(--bg-sunken); }
+td.num{ font-family:'JetBrains Mono',monospace; font-variant-numeric:tabular-nums; }
+
+.pill{
+  font-family:'JetBrains Mono',monospace; font-size:0.62rem; text-transform:uppercase;
+  letter-spacing:0.06em; padding:3px 9px; border-radius:20px; white-space:nowrap;
+  background:var(--bg-sunken); color:var(--ink-dim); display:inline-block;
+}
+.pill.on{ background:var(--accent-soft); color:var(--good); }
+.pill.warn{ background:var(--accent-2-soft); color:var(--accent-2); }
+.pill.off{ background:var(--bad-soft); color:var(--bad); }
+
+/* ===== Estado de carga / vacío ===== */
+.skeleton{
+  background:linear-gradient(90deg, var(--bg-sunken), var(--bg-elev), var(--bg-sunken));
+  background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:6px; height:14px;
+}
+@keyframes shimmer{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.empty{
+  padding:34px 20px; text-align:center; color:var(--ink-dim);
+  font-family:'JetBrains Mono',monospace; font-size:0.8rem;
+}
+
+/* ===== Pie ===== */
+footer.appfoot{
+  text-align:center; padding:40px 20px; color:var(--ink-dim);
+  font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.04em;
+  border-top:1px solid var(--line); margin-top:60px;
+}
+footer.appfoot a{ color:var(--ink-dim); }
+
+/* ===== Aviso de modo local ===== */
+.localbanner{
+  background:var(--accent-2-soft); border-bottom:1px solid var(--accent-2);
+  font-family:'JetBrains Mono',monospace; font-size:0.7rem; text-align:center;
+  padding:7px 16px; color:var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+}
+
+</style>
+<style>
+  .portal-hero{ padding:40px 0 8px; }
+  .portal-hero h1{ font-size:clamp(2.2rem,6.5vw,3.6rem); line-height:0.98; }
+  .portal-hero h1 em{ font-style:normal; color:var(--accent); }
+  .portal-hero .lead{ color:var(--ink-dim); font-size:1.05rem; max-width:58ch; margin-top:14px; }
+
+  /* Sesión de hoy */
+  .hoy{
+    display:grid; grid-template-columns:auto 1fr auto; gap:22px; align-items:center;
+    background:var(--bg-elev); border:1px solid var(--accent); border-radius:14px;
+    padding:22px 24px; margin-top:26px; box-shadow:var(--shadow);
+  }
+  @media (max-width:720px){ .hoy{ grid-template-columns:1fr; text-align:left; gap:16px; } }
+  .hoy .titulo{ font-family:'Big Shoulders Display',sans-serif; font-weight:800; font-size:1.5rem; text-transform:uppercase; }
+  .hoy .sub{ color:var(--ink-dim); font-size:0.94rem; margin-top:4px; }
+  .hoy .acciones{ display:flex; flex-direction:column; gap:8px; min-width:190px; }
+
+  .sesiones{ display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .sesion-btn{
+    font-family:'JetBrains Mono',monospace; font-size:0.68rem; text-transform:uppercase;
+    letter-spacing:0.05em; border:1px solid var(--line); background:var(--bg-sunken);
+    color:var(--ink-dim); border-radius:20px; padding:7px 13px; cursor:pointer;
+  }
+  .sesion-btn[aria-pressed="true"]{ border-color:var(--accent); color:var(--accent); background:var(--accent-soft); }
+
+  /* Mapa del grado */
+  .curso{ margin-top:34px; }
+  .curso-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:12px; flex-wrap:wrap; }
+  .curso-head h2{ font-size:1.35rem; }
+  .curso-head .meta{ font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.07em; }
+  .asignaturas{ display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:12px; }
+  .asig{
+    background:var(--bg-elev); border:1px solid var(--line); border-radius:11px; padding:14px 16px;
+    display:flex; flex-direction:column; gap:7px; text-decoration:none; color:var(--ink);
+    position:relative; min-height:118px;
+  }
+  .asig.abierta{ border-color:var(--accent); }
+  .asig.abierta:hover{ transform:translateY(-2px); box-shadow:var(--shadow); }
+  .asig.cerrada{ opacity:0.5; }
+  .asig .sem{ font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--ink-dim); letter-spacing:0.07em; text-transform:uppercase; }
+  .asig h3{ font-size:0.98rem; font-family:'Literata',serif; text-transform:none; letter-spacing:0; font-weight:600; line-height:1.3; }
+  .asig .foot{ margin-top:auto; display:flex; align-items:center; gap:8px; justify-content:space-between; }
+  .asig .prog{ font-family:'JetBrains Mono',monospace; font-size:0.66rem; color:var(--accent); }
+</style>
+<!-- Diagnóstico de arranque: avisa en pantalla si faltan archivos en el servidor -->
+<script>
+(function () {
+  var fallos = [];
+  window.addEventListener('error', function (e) {
+    var t = e.target;
+    if (t && (t.tagName === 'SCRIPT' || t.tagName === 'LINK')) {
+      var url = t.src || t.href || '';
+      if (url && url.indexOf('fonts.googleapis') === -1 && fallos.indexOf(url) === -1) fallos.push(url);
+    }
+  }, true);
+  window.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      if (window.__appLista) return;
+      var lista = fallos.length
+        ? '<ul style="margin:8px 0 0 18px;padding:0">' + fallos.map(function (f) {
+            return '<li style="margin:3px 0;font-family:ui-monospace,monospace;font-size:13px">' +
+                   f.replace(location.origin, '') + '</li>';
+          }).join('') + '</ul>'
+        : '';
+      var aviso = document.createElement('div');
+      aviso.setAttribute('role', 'alert');
+      aviso.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#2c1414;' +
+        'color:#ffe4e4;border-top:2px solid #ff8686;padding:16px 20px;max-height:60vh;overflow:auto;' +
+        'font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+      aviso.innerHTML = '<b>La aplicación no ha arrancado.</b> Faltan archivos en el servidor' +
+        (fallos.length ? ':' : '. Comprueba que las carpetas <b>assets/</b>, <b>temas/</b> e <b>icons/</b> ' +
+         'estén subidas junto a los .html.') + lista +
+        '<div style="margin-top:10px;opacity:.85">Sube la carpeta completa (con sus subcarpetas) y recarga.</div>';
+      document.body.appendChild(aviso);
+    }, 8000);
+  });
+})();
+</script>
+</head>
+<body>
+
+<main class="wrap">
+
+  <section class="portal-hero">
+    <span class="eyebrow">Grado en Física · UNED</span>
+    <h1>Tu ruta hasta<br>ser <em>físico teórico</em>.</h1>
+    <p class="lead">Todas las asignaturas del grado, una a una, convertidas en temas interactivos que se estudian desde el ordenador o la tablet — sin papel, en sesiones cortas y con repaso automático de lo que se te resiste.</p>
+
+    <div class="hoy" id="hoy">
+      <div id="hoyAnillo"></div>
+      <div>
+        <div class="titulo" id="hoyTitulo">Preparando tu sesión…</div>
+        <div class="sub" id="hoySub"></div>
+        <div class="sesiones" id="sesiones"></div>
+      </div>
+      <div class="acciones" id="hoyAcciones"></div>
+    </div>
+
+    <div class="stat-row" style="margin-top:22px" id="resumenGlobal"></div>
+  </section>
+
+  <section id="mapa"></section>
+
+</main>
+
+<script type="module">
+/* ============ APLICACIÓN COMPLETA INCRUSTADA ============ */
+/* ===== módulo: assets/js/config.js ===== */
+/* ==========================================================================
+   CONFIGURACIÓN — el único archivo que necesitas tocar
+   ==========================================================================
+
+   MODO LOCAL (por defecto)
+   Si dejas SUPABASE_URL y SUPABASE_ANON_KEY vacíos, la aplicación funciona
+   igualmente: guarda tu progreso en el propio dispositivo (localStorage).
+   Perfecto para estudiar tú solo desde ya, sin registrarte en nada.
+
+   MODO NUBE (cuando quieras cuentas de usuario)
+   Rellena las dos claves con los datos de tu proyecto de Supabase y la web
+   pasará automáticamente a tener registro, login, sincronización entre
+   dispositivos y panel de administración. No hay que cambiar nada más.
+   Las instrucciones paso a paso están en README.md.
+   ========================================================================== */
+
+const SUPABASE_URL = "";
+const SUPABASE_ANON_KEY = "";
+
+/* Correos que se convierten automáticamente en administradores al registrarse.
+   Pon aquí el tuyo antes de crear tu cuenta, por ejemplo:
+   export const ADMIN_EMAILS = ["yo@ejemplo.com"];                            */
+const ADMIN_EMAILS = [];
+
+/* Identidad de la aplicación */
+const APP = {
+  nombre: "Física UNED",
+  nombreLargo: "Plataforma de estudio · Grado en Física · UNED",
+  version: "1.0.0",
+};
+
+/* ¿Hay configuración de nube disponible? */
+const CLOUD_ENABLED = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+const config = { SUPABASE_URL, SUPABASE_ANON_KEY, ADMIN_EMAILS, APP, CLOUD_ENABLED };
+
+/* ===== módulo: assets/js/curriculum.js ===== */
+/* ==========================================================================
+   PLAN DE ESTUDIOS — Grado en Física (UNED, código 6104)
+   Cada asignatura tiene estado: "abierta" | "construccion"
+   Para abrir una asignatura nueva: cambia su estado y añade su "ruta".
+   ========================================================================== */
+
+const CURSOS = [
+  {
+    n: 1,
+    nombre: "Primer curso",
+    asignaturas: [
+      { code: "ff1",  nombre: "Fundamentos de Física I",    sem: 1, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "am1",  nombre: "Análisis Matemático I",      sem: 1, ects: 6, tipo: "básica", estado: "abierta", ruta: "asignatura.html?code=am1" },
+      { code: "alg",  nombre: "Álgebra",                    sem: 1, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "qui",  nombre: "Química",                    sem: 1, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "bio",  nombre: "Biología",                   sem: 1, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "ff2",  nombre: "Fundamentos de Física II",   sem: 2, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "am2",  nombre: "Análisis Matemático II",     sem: 2, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "mm1",  nombre: "Métodos Matemáticos I",      sem: 2, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "fc1",  nombre: "Física Computacional I",     sem: 2, ects: 6, tipo: "básica", estado: "construccion" },
+      { code: "te1",  nombre: "Técnicas Experimentales I",  sem: 2, ects: 6, tipo: "básica", estado: "construccion" },
+    ],
+  },
+  {
+    n: 2,
+    nombre: "Segundo curso",
+    asignaturas: [
+      { code: "ff3",  nombre: "Fundamentos de Física III",         sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "mm2",  nombre: "Métodos Matemáticos II",            sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "em1",  nombre: "Electromagnetismo I",               sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "fc2",  nombre: "Física Computacional II",           sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "mec",  nombre: "Mecánica",                          sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "mm3",  nombre: "Métodos Matemáticos III",           sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "vo",   nombre: "Vibraciones y Ondas",               sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "em2",  nombre: "Electromagnetismo II",              sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "tce",  nombre: "Teoría de Circuitos y Electrónica", sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "te2",  nombre: "Técnicas Experimentales II",        sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+    ],
+  },
+  {
+    n: 3,
+    nombre: "Tercer curso",
+    asignaturas: [
+      { code: "mm4",  nombre: "Métodos Matemáticos IV",      sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "td1",  nombre: "Termodinámica I",             sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "fq1",  nombre: "Física Cuántica I",           sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "op1",  nombre: "Óptica I",                    sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "mt",   nombre: "Mecánica Teórica",            sem: 1, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "td2",  nombre: "Termodinámica II",            sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "fq2",  nombre: "Física Cuántica II",          sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "op2",  nombre: "Óptica II",                   sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "edc",  nombre: "Electrodinámica Clásica",     sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+      { code: "te3",  nombre: "Técnicas Experimentales III", sem: 2, ects: 6, tipo: "obligatoria", estado: "construccion" },
+    ],
+  },
+  {
+    n: 4,
+    nombre: "Cuarto curso",
+    asignaturas: [
+      { code: "fnp",  nombre: "Física Nuclear y de Partículas", sem: 1, ects: 6,  tipo: "obligatoria", estado: "construccion" },
+      { code: "me",   nombre: "Mecánica Estadística",           sem: 1, ects: 6,  tipo: "obligatoria", estado: "construccion" },
+      { code: "ffl",  nombre: "Física de Fluidos",              sem: 1, ects: 6,  tipo: "obligatoria", estado: "construccion" },
+      { code: "fes",  nombre: "Física del Estado Sólido",       sem: 2, ects: 6,  tipo: "obligatoria", estado: "construccion" },
+      { code: "te4",  nombre: "Técnicas Experimentales IV",     sem: 2, ects: 6,  tipo: "obligatoria", estado: "construccion" },
+      { code: "mca",  nombre: "Mecánica Cuántica Avanzada",     sem: 1, ects: 5,  tipo: "optativa",    estado: "construccion" },
+      { code: "ast",  nombre: "Astrofísica General",            sem: 2, ects: 5,  tipo: "optativa",    estado: "construccion" },
+      { code: "rg",   nombre: "Relatividad General",            sem: 2, ects: 5,  tipo: "optativa",    estado: "construccion" },
+      { code: "bfi",  nombre: "Biofísica",                      sem: 1, ects: 5,  tipo: "optativa",    estado: "construccion" },
+      { code: "tfg",  nombre: "Trabajo Fin de Grado",           sem: 0, ects: 10, tipo: "TFG",         estado: "construccion" },
+    ],
+  },
+];
+
+/* Índice rápido por código */
+const ASIGNATURAS = Object.fromEntries(
+  CURSOS.flatMap((c) => c.asignaturas.map((a) => [a.code, { ...a, curso: c.n }]))
+);
+
+/* ==========================================================================
+   TEMARIOS — por ahora solo Análisis Matemático I está abierta
+   estado: "publicado" | "pendiente"
+   ========================================================================== */
+
+const TEMARIOS = {
+  am1: {
+    nombre: "Análisis Matemático I",
+    apodo: "Observatorio de Cálculo I",
+    descripcion:
+      "Cálculo de una variable mirado siempre desde la física: cinemática, campos, ondas y órbitas.",
+    temas: [
+      { code: "preliminares", n: 1,  titulo: "Preliminares",                             gancho: "Números, rectas, cónicas, funciones y trigonometría", estado: "publicado", ruta: "tema-am1-01-preliminares.html", preguntas: 21 },
+      { code: "limites",      n: 2,  titulo: "Límites y continuidad",                     gancho: "El instante en el cálculo de velocidades",           estado: "pendiente" },
+      { code: "derivadas",    n: 3,  titulo: "Diferenciación",                            gancho: "La derivada como razón de cambio física",            estado: "pendiente" },
+      { code: "trascendentes",n: 4,  titulo: "Funciones trascendentes",                   gancho: "Crecimiento exponencial, desintegración radiactiva", estado: "pendiente" },
+      { code: "aplic-deriv",  n: 5,  titulo: "Aplicaciones de las derivadas",             gancho: "Optimización y razones de cambio relacionadas",      estado: "pendiente" },
+      { code: "integracion",  n: 6,  titulo: "Integración",                               gancho: "De la velocidad a la posición",                      estado: "pendiente" },
+      { code: "tecnicas-int", n: 7,  titulo: "Técnicas de integración",                   gancho: "El arsenal para resolver integrales reales",         estado: "pendiente" },
+      { code: "aplic-int",    n: 8,  titulo: "Aplicaciones de la integración",            gancho: "Trabajo, energía y centros de masa",                 estado: "pendiente" },
+      { code: "conicas",      n: 9,  titulo: "Cónicas paramétricas y polares",            gancho: "Órbitas en coordenadas naturales",                   estado: "pendiente" },
+      { code: "series",       n: 10, titulo: "Secuencias, series y series de potencias",  gancho: "Aproximaciones de Taylor en física",                 estado: "pendiente" },
+      { code: "complejos",    n: 11, titulo: "Apéndice I · Números complejos",            gancho: "Oscilaciones y ondas con fasores",                   estado: "pendiente" },
+      { code: "func-complej", n: 12, titulo: "Apéndice II · Funciones complejas",         gancho: "Herramientas para electromagnetismo",                estado: "pendiente" },
+      { code: "continuas",    n: 13, titulo: "Apéndice III · Funciones continuas",        gancho: "El rigor detrás de la intuición física",             estado: "pendiente" },
+      { code: "riemann",      n: 14, titulo: "Apéndice IV · La integral de Riemann",      gancho: "Qué significa sumar infinitos trocitos",             estado: "pendiente" },
+    ],
+    recursos: [
+      { titulo: "Tablas de fórmulas e integrales", nota: "Chuleta rápida de derivadas e integrales" },
+      { titulo: "Soluciones de ejercicios impares", nota: "Para autocorregirte tras cada estación" },
+    ],
+  },
+};
+
+/* Utilidades */
+function temasDe(subjectCode) {
+  return TEMARIOS[subjectCode]?.temas ?? [];
+}
+function temaPublicado(subjectCode, topicCode) {
+  return temasDe(subjectCode).find((t) => t.code === topicCode && t.estado === "publicado");
+}
+function totalTemasPublicados() {
+  return Object.values(TEMARIOS).reduce(
+    (acc, s) => acc + s.temas.filter((t) => t.estado === "publicado").length, 0
+  );
+}
+function totalAsignaturas() {
+  return CURSOS.reduce((acc, c) => acc + c.asignaturas.length, 0);
+}
+function asignaturasAbiertas() {
+  return CURSOS.flatMap((c) => c.asignaturas).filter((a) => a.estado === "abierta");
+}
+
+const curriculum = { temasDe, temaPublicado, totalTemasPublicados, totalAsignaturas, asignaturasAbiertas, CURSOS, ASIGNATURAS, TEMARIOS };
+
+/* ===== módulo: assets/js/store.js ===== */
+/* ==========================================================================
+   STORE — sesión, usuarios y progreso
+   Funciona en dos modos de forma transparente:
+     · MODO LOCAL  → todo se guarda en este dispositivo (localStorage)
+     · MODO NUBE   → Supabase (auth + Postgres), con caché local y cola offline
+   ========================================================================== */
+
+const LS = {
+  progress: "fu_progress_v1",
+  exams: "fu_exams_v1",
+  profile: "fu_local_profile_v1",
+  queue: "fu_sync_queue_v1",
+};
+
+/* ---------- utilidades de almacenamiento seguro ---------- */
+function lsGet(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+function lsSet(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* modo privado */ }
+}
+
+/* ---------- niveles ---------- */
+const NIVELES = [
+  { min: 0,   titulo: "Aprendiz de Newton" },
+  { min: 60,  titulo: "Técnico de Laboratorio" },
+  { min: 150, titulo: "Analista de Trayectorias" },
+  { min: 280, titulo: "Maestro de Kepler" },
+  { min: 450, titulo: "Físico Certificado" },
+  { min: 700, titulo: "Catedrático de Cálculo" },
+];
+function nivelDe(xp) {
+  let i = 0;
+  NIVELES.forEach((n, idx) => { if (xp >= n.min) i = idx; });
+  const siguiente = NIVELES[i + 1];
+  return {
+    nivel: i + 1,
+    titulo: NIVELES[i].titulo,
+    desde: NIVELES[i].min,
+    hasta: siguiente ? siguiente.min : NIVELES[i].min + 300,
+    porcentaje: siguiente
+      ? Math.min(100, Math.round((100 * (xp - NIVELES[i].min)) / (siguiente.min - NIVELES[i].min)))
+      : 100,
+  };
+}
+
+/* ---------- cliente Supabase (carga perezosa) ---------- */
+let _client = null;
+async function client() {
+  if (!CLOUD_ENABLED) return null;
+  if (_client) return _client;
+  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+  _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true },
+  });
+  return _client;
+}
+
+/* ---------- estado en memoria ---------- */
+const state = {
+  modo: CLOUD_ENABLED ? "nube" : "local",
+  listo: false,
+  user: null,       // { id, email, nombre, rol }
+  answers: {},      // "subject/topic/item" → { correct, xp, at }
+  exams: [],        // { subject, topic, score, total, passed, at }
+};
+
+function modo() { return state.modo; }
+function usuario() { return state.user; }
+function esAdmin() { return state.user?.rol === "admin"; }
+function estaListo() { return state.listo; }
+
+const listeners = new Set();
+function onCambio(cb) { listeners.add(cb); return () => listeners.delete(cb); }
+function emitir() { listeners.forEach((cb) => { try { cb(state); } catch (e) {} }); }
+
+/* ---------- perfil local ---------- */
+function perfilLocal() {
+  let p = lsGet(LS.profile, null);
+  if (!p) {
+    p = { id: "local", email: null, nombre: "Estudiante", rol: "admin" };
+    lsSet(LS.profile, p);
+  }
+  return p;
+}
+function renombrarLocal(nombre) {
+  const p = perfilLocal();
+  p.nombre = nombre;
+  lsSet(LS.profile, p);
+  if (state.modo === "local") { state.user = p; emitir(); }
+}
+
+/* ==========================================================================
+   INICIALIZACIÓN
+   ========================================================================== */
+async function init() {
+  state.answers = lsGet(LS.progress, {});
+  state.exams = lsGet(LS.exams, []);
+
+  if (state.modo === "local") {
+    state.user = perfilLocal();
+    state.listo = true;
+    emitir();
+    return state;
+  }
+
+  try {
+    const sb = await client();
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      await cargarUsuarioNube(sb, session.user);
+      await cargarProgresoNube(sb);
+      await vaciarCola();
+    } else {
+      state.user = null;
+    }
+    sb.auth.onAuthStateChange(async (_evento, sesion) => {
+      if (sesion?.user) {
+        await cargarUsuarioNube(sb, sesion.user);
+        await cargarProgresoNube(sb);
+      } else {
+        state.user = null;
+      }
+      emitir();
+    });
+  } catch (e) {
+    console.warn("No se pudo conectar con la nube, se usa el modo local:", e.message);
+    state.modo = "local";
+    state.user = perfilLocal();
+  }
+
+  state.listo = true;
+  emitir();
+  return state;
+}
+
+async function cargarUsuarioNube(sb, authUser) {
+  let { data: perfil } = await sb.from("profiles").select("*").eq("id", authUser.id).maybeSingle();
+
+  if (!perfil) {
+    const rolInicial = ADMIN_EMAILS.includes(authUser.email) ? "admin" : "student";
+    const { data } = await sb.from("profiles").insert({
+      id: authUser.id,
+      email: authUser.email,
+      display_name: authUser.user_metadata?.display_name || authUser.email.split("@")[0],
+      role: rolInicial,
+    }).select().maybeSingle();
+    perfil = data;
+  } else {
+    sb.from("profiles").update({ last_seen_at: new Date().toISOString() }).eq("id", authUser.id).then(() => {});
+  }
+
+  state.user = {
+    id: authUser.id,
+    email: authUser.email,
+    nombre: perfil?.display_name || authUser.email.split("@")[0],
+    rol: perfil?.role || "student",
+  };
+}
+
+async function cargarProgresoNube(sb) {
+  const { data: filas } = await sb
+    .from("progress")
+    .select("subject_code, topic_code, item_id, correct, xp, answered_at, box, due_date, attempts, misses")
+    .eq("user_id", state.user.id);
+  if (filas) {
+    const mapa = {};
+    filas.forEach((f) => {
+      mapa[`${f.subject_code}/${f.topic_code}/${f.item_id}`] = {
+        correct: f.correct, xp: f.xp, at: f.answered_at,
+        box: f.box ?? 0, due: f.due_date, intentos: f.attempts ?? 1, fallos: f.misses ?? 0,
+      };
+    });
+    // La nube manda, pero conservamos lo que solo exista en local (pendiente de subir)
+    state.answers = { ...state.answers, ...mapa };
+    lsSet(LS.progress, state.answers);
+  }
+  const { data: examenes } = await sb
+    .from("exam_results")
+    .select("subject_code, topic_code, score, total, passed, taken_at")
+    .eq("user_id", state.user.id)
+    .order("taken_at", { ascending: false });
+  if (examenes) {
+    state.exams = examenes.map((e) => ({
+      subject: e.subject_code, topic: e.topic_code, score: e.score,
+      total: e.total, passed: e.passed, at: e.taken_at,
+    }));
+    lsSet(LS.exams, state.exams);
+  }
+}
+
+/* ==========================================================================
+   AUTENTICACIÓN
+   ========================================================================== */
+async function registrarse(email, password, nombre) {
+  const sb = await client();
+  if (!sb) throw new Error("La nube no está configurada todavía.");
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { display_name: nombre } },
+  });
+  if (error) throw new Error(traducirError(error.message));
+  return data;
+}
+
+async function entrar(email, password) {
+  const sb = await client();
+  if (!sb) throw new Error("La nube no está configurada todavía.");
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) throw new Error(traducirError(error.message));
+  await cargarUsuarioNube(sb, data.user);
+  await cargarProgresoNube(sb);
+  await vaciarCola();
+  emitir();
+  return data;
+}
+
+async function salir() {
+  const sb = await client();
+  if (sb) await sb.auth.signOut();
+  state.user = null;
+  emitir();
+}
+
+async function recuperarContrasena(email) {
+  const sb = await client();
+  if (!sb) throw new Error("La nube no está configurada todavía.");
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + "/login.html",
+  });
+  if (error) throw new Error(traducirError(error.message));
+}
+
+function traducirError(msg) {
+  const m = (msg || "").toLowerCase();
+  if (m.includes("invalid login")) return "Correo o contraseña incorrectos.";
+  if (m.includes("already registered")) return "Ese correo ya tiene cuenta. Prueba a entrar.";
+  if (m.includes("password should be")) return "La contraseña debe tener al menos 6 caracteres.";
+  if (m.includes("email not confirmed")) return "Tienes que confirmar el correo antes de entrar.";
+  if (m.includes("rate limit")) return "Demasiados intentos seguidos. Espera un minuto.";
+  return msg;
+}
+
+/* ==========================================================================
+   PROGRESO
+   ========================================================================== */
+function clave(subject, topic, item) { return `${subject}/${topic}/${item}`; }
+
+function respuestaDe(subject, topic, item) {
+  return state.answers[clave(subject, topic, item)] || null;
+}
+
+function respuestasDeTema(subject, topic) {
+  const prefijo = `${subject}/${topic}/`;
+  const res = {};
+  Object.entries(state.answers).forEach(([k, v]) => {
+    if (k.startsWith(prefijo)) res[k.slice(prefijo.length)] = v;
+  });
+  return res;
+}
+
+/* Repaso espaciado (sistema Leitner): días hasta el próximo repaso según caja */
+const INTERVALOS = [1, 1, 3, 7, 16, 35];
+function proximaFecha(caja) {
+  const dias = INTERVALOS[Math.min(caja, INTERVALOS.length - 1)];
+  const d = new Date();
+  d.setDate(d.getDate() + dias);
+  return d.toISOString().slice(0, 10);
+}
+
+async function registrarRespuesta({ subject, topic, item, correct, xp = 0, esRepaso = false }) {
+  const k = clave(subject, topic, item);
+  const previa = state.answers[k];
+
+  // El XP solo se concede la primera vez que se acierta; los repasos no puntúan de nuevo,
+  // pero sí actualizan la caja de repaso espaciado.
+  const yaPuntuada = Boolean(previa?.correct);
+  const cajaPrevia = previa?.box ?? 0;
+  const caja = correct ? Math.min(cajaPrevia + 1, INTERVALOS.length - 1) : Math.max(cajaPrevia - 1, 0);
+
+  const registro = {
+    correct,
+    xp: yaPuntuada ? (previa.xp || 0) : (correct ? xp : 0),
+    at: previa?.at || new Date().toISOString(),
+    ultimo: new Date().toISOString(),
+    box: caja,
+    due: proximaFecha(caja),
+    intentos: (previa?.intentos || 0) + 1,
+    fallos: (previa?.fallos || 0) + (correct ? 0 : 1),
+  };
+  // Una pregunta ya superada nunca "se desaprende": el progreso no retrocede.
+  if (yaPuntuada) registro.correct = true;
+
+  state.answers[k] = registro;
+  lsSet(LS.progress, state.answers);
+  emitir();
+
+  if (state.modo === "nube" && state.user) {
+    const fila = {
+      user_id: state.user.id, subject_code: subject, topic_code: topic,
+      item_id: item, correct: registro.correct, xp: registro.xp,
+      answered_at: registro.at, box: registro.box, due_date: registro.due,
+      attempts: registro.intentos, misses: registro.fallos,
+    };
+    try {
+      const sb = await client();
+      const { error } = await sb.from("progress").upsert(fila, {
+        onConflict: "user_id,subject_code,topic_code,item_id",
+      });
+      if (error) encolar("progress", fila);
+    } catch (e) {
+      encolar("progress", fila);
+    }
+  }
+  return registro;
+}
+
+async function registrarExamen({ subject, topic, score, total, passed }) {
+  const registro = { subject, topic, score, total, passed, at: new Date().toISOString() };
+  state.exams.unshift(registro);
+  lsSet(LS.exams, state.exams);
+  emitir();
+
+  if (state.modo === "nube" && state.user) {
+    const fila = {
+      user_id: state.user.id, subject_code: subject, topic_code: topic,
+      score, total, passed, taken_at: registro.at,
+    };
+    try {
+      const sb = await client();
+      const { error } = await sb.from("exam_results").insert(fila);
+      if (error) encolar("exam_results", fila);
+    } catch (e) {
+      encolar("exam_results", fila);
+    }
+  }
+  return registro;
+}
+
+function examenes() { return state.exams; }
+
+/* ---------- cola de sincronización offline ---------- */
+function encolar(tabla, fila) {
+  const cola = lsGet(LS.queue, []);
+  cola.push({ tabla, fila });
+  lsSet(LS.queue, cola);
+}
+async function vaciarCola() {
+  if (state.modo !== "nube" || !state.user) return;
+  const cola = lsGet(LS.queue, []);
+  if (!cola.length) return;
+  const sb = await client();
+  const restantes = [];
+  for (const item of cola) {
+    try {
+      const fila = { ...item.fila, user_id: state.user.id };
+      const { error } = item.tabla === "progress"
+        ? await sb.from("progress").upsert(fila, { onConflict: "user_id,subject_code,topic_code,item_id" })
+        : await sb.from("exam_results").insert(fila);
+      if (error) restantes.push(item);
+    } catch (e) { restantes.push(item); }
+  }
+  lsSet(LS.queue, restantes);
+}
+window.addEventListener("online", () => { vaciarCola(); });
+
+/* ==========================================================================
+   ESTADÍSTICAS DEL USUARIO
+   ========================================================================== */
+function xpTotal() {
+  return Object.values(state.answers).reduce((a, r) => a + (r.xp || 0), 0);
+}
+function aciertos() {
+  const vals = Object.values(state.answers);
+  return { correctas: vals.filter((v) => v.correct).length, total: vals.length };
+}
+function progresoTema(subject, topic, totalPreguntas) {
+  const r = respuestasDeTema(subject, topic);
+  const correctas = Object.values(r).filter((v) => v.correct).length;
+  return {
+    correctas,
+    total: totalPreguntas,
+    porcentaje: totalPreguntas ? Math.round((100 * correctas) / totalPreguntas) : 0,
+    completado: totalPreguntas > 0 && correctas >= totalPreguntas,
+  };
+}
+function temasConActividad() {
+  const s = new Set();
+  Object.keys(state.answers).forEach((k) => {
+    const [subject, topic] = k.split("/");
+    s.add(`${subject}/${topic}`);
+  });
+  return [...s];
+}
+function actividadPorDia(dias = 30) {
+  const hoy = new Date();
+  const mapa = {};
+  for (let i = dias - 1; i >= 0; i--) {
+    const d = new Date(hoy); d.setDate(hoy.getDate() - i);
+    mapa[d.toISOString().slice(0, 10)] = 0;
+  }
+  Object.values(state.answers).forEach((r) => {
+    const dia = (r.at || "").slice(0, 10);
+    if (dia in mapa) mapa[dia] += 1;
+  });
+  return mapa;
+}
+function diasActivos() {
+  return new Set(Object.values(state.answers).map((r) => (r.at || "").slice(0, 10))).size;
+}
+function mejorRacha() {
+  const dias = [...new Set(Object.values(state.answers).map((r) => (r.at || "").slice(0, 10)))]
+    .filter(Boolean).sort();
+  let mejor = 0, actual = 0, previo = null;
+  dias.forEach((d) => {
+    if (previo) {
+      const dif = (new Date(d) - new Date(previo)) / 86400000;
+      actual = dif === 1 ? actual + 1 : 1;
+    } else actual = 1;
+    mejor = Math.max(mejor, actual);
+    previo = d;
+  });
+  return mejor;
+}
+function rachaDias() {
+  const dias = new Set(Object.values(state.answers).map((r) => (r.at || "").slice(0, 10)));
+  let racha = 0;
+  const d = new Date();
+  // permite que hoy aún no haya actividad sin romper la racha de ayer
+  if (!dias.has(d.toISOString().slice(0, 10))) d.setDate(d.getDate() - 1);
+  while (dias.has(d.toISOString().slice(0, 10))) { racha++; d.setDate(d.getDate() - 1); }
+  return racha;
+}
+
+/* ==========================================================================
+   REPASO ESPACIADO — qué toca repasar hoy
+   Nada caduca ni se pierde: si pasan semanas, la cola simplemente espera.
+   ========================================================================== */
+function pendientesDeRepaso(limite = 999) {
+  const hoy = new Date().toISOString().slice(0, 10);
+  return Object.entries(state.answers)
+    .filter(([, v]) => v.due && v.due <= hoy)
+    .map(([k, v]) => {
+      const [subject, topic, item] = k.split("/");
+      return { clave: k, subject, topic, item, ...v };
+    })
+    .sort((a, b) => (a.box - b.box) || (a.due < b.due ? -1 : 1))
+    .slice(0, limite);
+}
+
+function resumenRepaso() {
+  const pend = pendientesDeRepaso();
+  const total = Object.keys(state.answers).length;
+  const dominadas = Object.values(state.answers).filter((v) => (v.box ?? 0) >= 4).length;
+  const flojas = Object.values(state.answers).filter((v) => (v.box ?? 0) <= 1 && v.intentos).length;
+  return { pendientes: pend.length, total, dominadas, flojas };
+}
+
+/* Duraciones de sesión (minutos → nº de preguntas aproximado) */
+const SESIONES = [
+  { id: "corta",   min: 5,  preguntas: 5,  etiqueta: "Sesión corta",  nota: "Día flojo: solo repaso" },
+  { id: "media",   min: 10, preguntas: 10, etiqueta: "Sesión media",  nota: "Repaso + un bloque nuevo" },
+  { id: "completa",min: 25, preguntas: 20, etiqueta: "Sesión completa",nota: "Tema nuevo entero" },
+];
+function sesionPreferida() { return lsGet("fu_sesion_pref", "media"); }
+function guardarSesionPreferida(id) { lsSet("fu_sesion_pref", id); }
+
+/* ==========================================================================
+   ADMINISTRACIÓN (solo rol admin; en modo local devuelve datos propios)
+   ========================================================================== */
+async function adminUsuarios() {
+  if (state.modo === "local") {
+    const resumen = aciertos();
+    return [{
+      id: "local", email: "(modo local)", display_name: state.user?.nombre || "Estudiante",
+      role: "admin", created_at: null, last_seen_at: new Date().toISOString(),
+      xp: xpTotal(), respuestas: resumen.total, correctas: resumen.correctas,
+    }];
+  }
+  const sb = await client();
+  const { data: perfiles, error } = await sb
+    .from("profiles").select("*").order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+
+  const { data: progreso } = await sb.from("progress").select("user_id, xp, correct");
+  const agregado = {};
+  (progreso || []).forEach((p) => {
+    const a = (agregado[p.user_id] ||= { xp: 0, respuestas: 0, correctas: 0 });
+    a.xp += p.xp || 0; a.respuestas += 1; if (p.correct) a.correctas += 1;
+  });
+
+  return (perfiles || []).map((p) => ({
+    ...p,
+    xp: agregado[p.id]?.xp || 0,
+    respuestas: agregado[p.id]?.respuestas || 0,
+    correctas: agregado[p.id]?.correctas || 0,
+  }));
+}
+
+async function adminCambiarRol(userId, rol) {
+  if (state.modo === "local") throw new Error("Disponible solo en modo nube.");
+  const sb = await client();
+  const { error } = await sb.from("profiles").update({ role: rol }).eq("id", userId);
+  if (error) throw new Error(error.message);
+}
+
+async function adminExamenes() {
+  if (state.modo === "local") {
+    return state.exams.map((e) => ({ ...e, email: "(modo local)" }));
+  }
+  const sb = await client();
+  const { data } = await sb
+    .from("exam_results")
+    .select("subject_code, topic_code, score, total, passed, taken_at, profiles(email, display_name)")
+    .order("taken_at", { ascending: false })
+    .limit(100);
+  return (data || []).map((e) => ({
+    subject: e.subject_code, topic: e.topic_code, score: e.score, total: e.total,
+    passed: e.passed, at: e.taken_at,
+    email: e.profiles?.email || "—", nombre: e.profiles?.display_name || "—",
+  }));
+}
+
+async function adminPreguntasDificiles() {
+  if (state.modo === "local") {
+    return Object.entries(state.answers)
+      .filter(([, v]) => !v.correct)
+      .map(([k]) => ({ item: k, fallos: 1, intentos: 1 }));
+  }
+  const sb = await client();
+  const { data } = await sb.from("progress").select("subject_code, topic_code, item_id, correct");
+  const mapa = {};
+  (data || []).forEach((r) => {
+    const k = `${r.subject_code}/${r.topic_code}/${r.item_id}`;
+    const m = (mapa[k] ||= { item: k, fallos: 0, intentos: 0 });
+    m.intentos += 1; if (!r.correct) m.fallos += 1;
+  });
+  return Object.values(mapa).filter((m) => m.fallos > 0).sort((a, b) => b.fallos - a.fallos).slice(0, 12);
+}
+
+const store = { nivelDe, modo, usuario, esAdmin, estaListo, onCambio, renombrarLocal, init, registrarse, entrar, salir, recuperarContrasena, clave, respuestaDe, respuestasDeTema, registrarRespuesta, registrarExamen, examenes, vaciarCola, xpTotal, aciertos, progresoTema, temasConActividad, actividadPorDia, diasActivos, mejorRacha, rachaDias, pendientesDeRepaso, resumenRepaso, sesionPreferida, guardarSesionPreferida, adminUsuarios, adminCambiarRol, adminExamenes, adminPreguntasDificiles, NIVELES, SESIONES };
+
+/* ===== módulo: assets/js/ui.js ===== */
+/* ==========================================================================
+   UI — cabecera compartida, chip de usuario y utilidades comunes
+   ========================================================================== */
+
+
+function el(tag, props = {}, ...hijos) {
+  const n = document.createElement(tag);
+  Object.entries(props).forEach(([k, v]) => {
+    if (k === "class") n.className = v;
+    else if (k === "html") n.innerHTML = v;
+    else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (v !== null && v !== undefined && v !== false) n.setAttribute(k, v);
+  });
+  hijos.flat().forEach((h) => {
+    if (h === null || h === undefined || h === false) return;
+    n.appendChild(typeof h === "string" ? document.createTextNode(h) : h);
+  });
+  return n;
+}
+
+/* Ruta relativa a la raíz según la profundidad de la página actual */
+function raiz() {
+  return window.location.pathname.includes("/temas/") ? "../" : "";
+}
+
+const NAV = [
+  { href: "index.html", texto: "El grado" },
+  { href: "asignatura.html?code=am1", texto: "Cálculo I" },
+  { href: "repaso.html", texto: "Repaso" },
+  { href: "perfil.html", texto: "Mi progreso" },
+];
+
+function montarCabecera(paginaActual = "") {
+  const r = raiz();
+  const barra = el("header", { class: "appbar" });
+  const inner = el("div", { class: "appbar-inner" });
+
+  inner.appendChild(
+    el("a", { class: "brand", href: r + "index.html" },
+      el("span", { class: "spark" }, "◉"),
+      APP.nombre
+    )
+  );
+
+  const nav = el("nav");
+  NAV.forEach((item) => {
+    const base = item.href.split("?")[0].replace(".html", "");
+    const props = { href: r + item.href };
+    if (base === paginaActual) props["aria-current"] = "page";
+    nav.appendChild(el("a", props, item.texto));
+  });
+  inner.appendChild(nav);
+  inner.appendChild(el("div", { class: "spacer" }));
+
+  const zonaUsuario = el("div", { id: "zonaUsuario" });
+  inner.appendChild(zonaUsuario);
+  barra.appendChild(inner);
+
+  document.body.prepend(barra);
+  if (store.modo() === "local") {
+    barra.after(
+      el("div", { class: "localbanner" },
+        "Modo local · tu progreso se guarda en este dispositivo. Configura Supabase (README) para tener cuenta y sincronizar entre iPad y Mac."
+      )
+    );
+  }
+
+  const pintar = () => pintarUsuario(zonaUsuario, paginaActual);
+  pintar();
+  store.onCambio(pintar);
+}
+
+function pintarUsuario(zona, paginaActual) {
+  zona.innerHTML = "";
+  const r = raiz();
+  const u = store.usuario();
+
+  if (!u) {
+    zona.appendChild(el("a", { class: "btn small primary", href: r + "login.html" }, "Entrar"));
+    return;
+  }
+
+  const xp = store.xpTotal();
+  const nivel = store.nivelDe(xp);
+  const inicial = (u.nombre || "?").trim().charAt(0).toUpperCase();
+
+  const chip = el("a", { class: "userchip", href: r + "perfil.html", title: `${u.nombre} · ${nivel.titulo}` },
+    el("span", { class: "avatar" }, inicial),
+    el("span", { class: "meta" },
+      el("span", { class: "n" }, u.nombre),
+      el("span", { class: "x" }, `Nv.${nivel.nivel} · ${xp} XP`)
+    )
+  );
+  zona.appendChild(chip);
+
+  if (store.esAdmin() && paginaActual !== "admin") {
+    zona.appendChild(el("a", { class: "btn small ghost", href: r + "admin.html", style: "margin-left:8px" }, "Admin"));
+  }
+}
+
+/* Pie de página común */
+function montarPie() {
+  const r = raiz();
+  document.body.appendChild(
+    el("footer", { class: "appfoot" },
+      el("div", {}, `${APP.nombreLargo} · v${APP.version}`),
+      el("div", { style: "margin-top:6px" },
+        el("a", { href: r + "index.html" }, "El grado"), " · ",
+        el("a", { href: r + "repaso.html" }, "Repaso de hoy"), " · ",
+        el("a", { href: r + "perfil.html" }, "Mi progreso")
+      )
+    )
+  );
+}
+
+/* Anillo de progreso reutilizable */
+function anillo(porcentaje, tamano = 74, etiqueta = null) {
+  const radio = tamano / 2 - 6;
+  const circ = 2 * Math.PI * radio;
+  const offset = circ * (1 - Math.max(0, Math.min(100, porcentaje)) / 100);
+  const cont = el("div", { class: "ring", style: `width:${tamano}px;height:${tamano}px` });
+  cont.innerHTML = `
+    <svg width="${tamano}" height="${tamano}" viewBox="0 0 ${tamano} ${tamano}" aria-hidden="true">
+      <circle cx="${tamano / 2}" cy="${tamano / 2}" r="${radio}" fill="none" stroke="var(--bg-sunken)" stroke-width="7"/>
+      <circle cx="${tamano / 2}" cy="${tamano / 2}" r="${radio}" fill="none" stroke="var(--accent)" stroke-width="7"
+        stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" stroke-linecap="round"/>
+    </svg>
+    <div class="ring-label">${etiqueta ?? porcentaje + "%"}</div>`;
+  return cont;
+}
+
+/* Formato de fechas en español, tolerante a nulos */
+function fecha(iso, conHora = false) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d)) return "—";
+  const opciones = conHora
+    ? { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }
+    : { day: "2-digit", month: "short", year: "numeric" };
+  return d.toLocaleDateString("es-ES", opciones);
+}
+function haceCuanto(iso) {
+  if (!iso) return "nunca";
+  const min = Math.round((Date.now() - new Date(iso)) / 60000);
+  if (isNaN(min)) return "nunca";
+  if (min < 1) return "ahora mismo";
+  if (min < 60) return `hace ${min} min`;
+  const h = Math.round(min / 60);
+  if (h < 24) return `hace ${h} h`;
+  const d = Math.round(h / 24);
+  if (d < 30) return `hace ${d} d`;
+  return fecha(iso);
+}
+
+/* Registro del service worker (PWA) */
+function registrarPWA() {
+  if (!("serviceWorker" in navigator)) return;
+  if (location.protocol === "file:") return; // no funciona abriendo el archivo directamente
+  const r = raiz();
+  navigator.serviceWorker.register(r + "sw.js").catch(() => {});
+}
+
+/* Arranque estándar de una página */
+async function arrancar(pagina) {
+  await store.init();
+  montarCabecera(pagina);
+  registrarPWA();
+  // Señal para el diagnóstico de arranque incrustado en cada página:
+  // si esto no llega a ejecutarse, la página muestra un aviso explicando qué falta.
+  window.__appLista = true;
+  return store;
+}
+
+const ui = { el, raiz, montarCabecera, montarPie, anillo, fecha, haceCuanto, registrarPWA, arrancar };
+
+/* ===== módulo: assets/js/quiz.js ===== */
+/* ==========================================================================
+   MOTOR DE PREGUNTAS
+   Se usa en los temas (mini-test por estación), en el examen de certificación
+   y en la sesión de repaso espaciado.
+   Filosofía: fallar no castiga. Una pregunta fallada vuelve pronto; una
+   acertada se aleja en el tiempo. El progreso nunca retrocede.
+   ========================================================================== */
+
+
+function renderQuiz(contenedor, opciones) {
+  const {
+    subject, topic, preguntas,
+    examen = false,
+    xpPorPregunta = 10,
+    aprobadoMin = 0.75,
+    esRepaso = false,
+    onFin = null,
+  } = opciones;
+
+  contenedor.innerHTML = "";
+  let respondidasSesion = 0;
+  let aciertosSesion = 0;
+
+  preguntas.forEach((item, i) => {
+    const idItem = item.id || `q${i}`;
+    const previa = store.respuestaDe(subject, topic, idItem);
+    const yaAcertada = Boolean(previa?.correct) && !esRepaso;
+
+    const bloque = el("div", { class: "quiz-item" });
+
+    const textoPregunta = el("span", { html: item.q });
+    const enunciado = el("div", { class: "q" },
+      el("span", { class: "idx" }, `P${i + 1}.`),
+      textoPregunta
+    );
+    bloque.appendChild(enunciado);
+
+    const opts = el("div", { class: "opts" });
+    const explicacion = el("div", { class: "explain" },
+      el("span", { html: item.explica || "" })
+    );
+
+    item.opts.forEach((texto, oi) => {
+      const boton = el("button", { class: "opt", type: "button", html: texto });
+
+      if (yaAcertada) {
+        boton.disabled = true;
+        if (oi === item.correcta) boton.classList.add("correct");
+      }
+
+      boton.addEventListener("click", async () => {
+        opts.querySelectorAll(".opt").forEach((b) => (b.disabled = true));
+        const acierto = oi === item.correcta;
+        respondidasSesion++;
+        if (acierto) aciertosSesion++;
+
+        if (acierto) {
+          boton.classList.add("correct");
+        } else {
+          boton.classList.add("wrong");
+          opts.querySelectorAll(".opt")[item.correcta].classList.add("correct");
+        }
+
+        const antes = store.xpTotal();
+        await store.registrarRespuesta({
+          subject, topic, item: idItem, correct: acierto, xp: xpPorPregunta, esRepaso,
+        });
+        const ganado = store.xpTotal() - antes;
+
+        if (ganado > 0) {
+          textoPregunta.appendChild(el("span", { class: "xp-pop" }, `+${ganado} XP`));
+        }
+
+        const nota = el("div", { class: "review-note" },
+          acierto
+            ? "✓ Guardado. Volverá a aparecer más adelante para consolidarlo."
+            : "Sin problema: esta pregunta vuelve en un par de días. Así se aprende."
+        );
+        explicacion.appendChild(nota);
+        explicacion.classList.add("show");
+
+        if (onFin && respondidasSesion === preguntas.length) {
+          onFin({ aciertos: aciertosSesion, total: preguntas.length });
+        }
+        if (examen && respondidasSesion === preguntas.length) {
+          await cerrarExamen(contenedor, {
+            subject, topic, aciertos: aciertosSesion, total: preguntas.length, aprobadoMin,
+          });
+        }
+      });
+
+      opts.appendChild(boton);
+    });
+
+    bloque.appendChild(opts);
+    bloque.appendChild(explicacion);
+    if (yaAcertada) {
+      explicacion.classList.add("show");
+      explicacion.appendChild(el("div", { class: "review-note" }, "✓ Ya superada. Aparecerá en los repasos."));
+    }
+    contenedor.appendChild(bloque);
+  });
+}
+
+async function cerrarExamen(contenedor, { subject, topic, aciertos, total, aprobadoMin }) {
+  const aprobado = aciertos / total >= aprobadoMin;
+  await store.registrarExamen({ subject, topic, score: aciertos, total, passed: aprobado });
+
+  const panel = el("div", { class: `exam-result ${aprobado ? "ok" : "again"}` },
+    el("div", { class: "exam-ring" }, aprobado ? "🏆" : "↻"),
+    el("h3", {}, aprobado ? "Certificado" : "Casi"),
+    el("p", {},
+      aprobado
+        ? `${aciertos} de ${total} correctas. Tema dominado — queda registrado en tu historial de exámenes.`
+        : `${aciertos} de ${total} correctas. No pasa nada: las que fallaste entran en la cola de repaso y podrás volver a intentarlo cuando quieras.`
+    )
+  );
+  contenedor.appendChild(panel);
+  panel.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/* Progreso de un tema a partir de sus preguntas declaradas */
+function progresoDeTema(subject, topic, todasLasPreguntas) {
+  return store.progresoTema(subject, topic, todasLasPreguntas.length);
+}
+
+const quiz = { renderQuiz, progresoDeTema };
+
+/* ===== módulo: assets/js/banco/am1-preliminares.js ===== */
+/* ==========================================================================
+   BANCO DE PREGUNTAS — Análisis Matemático I · Tema 1: Preliminares
+   Fuente: Capítulo P del libro de la asignatura (UNED).
+   Cada pregunta lleva un id estable: no cambiarlo nunca, porque el progreso
+   y la cola de repaso espaciado se guardan usando ese id.
+   ========================================================================== */
+
+const ESTACIONES = [
+  {
+    id: "s1",
+    titulo: "La recta real",
+    preguntas: [
+      {
+        id: "s1q1",
+        q: "Un sensor marca T = 20 °C con una tolerancia de ±0,5 °C. ¿Qué desigualdad describe la temperatura real x?",
+        opts: ["|x − 20| &lt; 0,5", "|x − 0,5| &lt; 20", "|x| &lt; 20,5", "x &lt; 0,5"],
+        correcta: 0,
+        explica: "La tolerancia de un instrumento define una vecindad: la distancia entre el valor real y la lectura tiene que ser menor que el margen de error.",
+      },
+      {
+        id: "s1q2",
+        q: "¿Cuál es el conjunto solución de |x − 3| ≤ 2?",
+        opts: ["[1, 5]", "(1, 5)", "[−1, 5]", "[5, ∞)"],
+        correcta: 0,
+        explica: "|x − a| ≤ D equivale a a − D ≤ x ≤ a + D. Aquí 3 − 2 = 1 y 3 + 2 = 5, con los extremos incluidos por el ≤.",
+      },
+      {
+        id: "s1q3",
+        q: "√2 es irracional. ¿Qué significa eso físicamente para una medida?",
+        opts: [
+          "Que no puede escribirse como cociente exacto de enteros, aunque ocupa un punto perfectamente definido de la recta real",
+          "Que no existe en la recta real",
+          "Que solo tiene sentido en geometría, no en cálculo",
+        ],
+        correcta: 0,
+        explica: "La completitud de ℝ garantiza que no hay huecos: √2 ocupa un punto exacto. Que su desarrollo decimal no termine no le quita realidad física.",
+      },
+    ],
+  },
+  {
+    id: "s2",
+    titulo: "Plano, incrementos y rectas",
+    preguntas: [
+      {
+        id: "s2q1",
+        q: "Una partícula pasa de x₁ = 2 m en t₁ = 1 s a x₂ = 10 m en t₂ = 3 s. ¿Cuál es su velocidad media?",
+        opts: ["4 m/s", "8 m/s", "2 m/s", "5 m/s"],
+        correcta: 0,
+        explica: "v̄ = Δx/Δt = (10 − 2)/(3 − 1) = 8/2 = 4 m/s. La velocidad media es exactamente la pendiente de la recta que une los dos puntos en la gráfica x(t).",
+      },
+      {
+        id: "s2q2",
+        q: "En una gráfica posición–tiempo, ¿qué significaría un tramo perfectamente vertical?",
+        opts: [
+          "Velocidad infinita: imposible para un objeto con masa",
+          "Reposo total",
+          "Velocidad constante",
+        ],
+        correcta: 0,
+        explica: "Un tramo vertical tiene Δt = 0, y la pendiente Δx/0 queda indefinida. Es la misma razón por la que la pendiente de una recta vertical no existe.",
+      },
+      {
+        id: "s2q3",
+        q: "Dos rectas en una gráfica x(t) tienen la misma pendiente. ¿Qué comparten los dos movimientos?",
+        opts: [
+          "La misma velocidad, aunque partan de posiciones distintas",
+          "La misma posición inicial",
+          "El mismo instante de llegada",
+        ],
+        correcta: 0,
+        explica: "Rectas paralelas ⇒ misma pendiente ⇒ misma velocidad. Lo que cambia es la ordenada en el origen, es decir, desde dónde salió cada objeto.",
+      },
+    ],
+  },
+  {
+    id: "s3",
+    titulo: "Cónicas",
+    preguntas: [
+      {
+        id: "s3q1",
+        q: "¿Por qué la trayectoria de un proyectil sin rozamiento es una parábola?",
+        opts: [
+          "Porque al eliminar t entre x(t) y y(t) aparece un término en x², cuadrático",
+          "Porque la velocidad es constante",
+          "Porque la Tierra es curva",
+        ],
+        correcta: 0,
+        explica: "x(t) = v₀cosθ·t es lineal en t. Despejando t = x/(v₀cosθ) y sustituyendo en y(t) = v₀senθ·t − ½gt² sale y(x) con un término en x²: una parábola.",
+      },
+      {
+        id: "s3q2",
+        q: "Según la 1ª ley de Kepler, ¿dónde está el Sol en la órbita elíptica de un planeta?",
+        opts: ["En uno de los dos focos", "En el centro geométrico", "Fuera de la elipse"],
+        correcta: 0,
+        explica: "El Sol ocupa un foco, no el centro. Por eso la distancia Tierra–Sol cambia a lo largo del año (perihelio y afelio).",
+      },
+      {
+        id: "s3q3",
+        q: "¿Qué propiedad de la parábola hace que se use en antenas y telescopios?",
+        opts: [
+          "Todos los rayos paralelos al eje se reflejan y convergen en el foco",
+          "Todos sus puntos equidistan del centro",
+          "No tiene curvatura",
+        ],
+        correcta: 0,
+        explica: "Es la propiedad de reflexión: concentra en un único punto toda la señal paralela que recibe. De ahí la forma de los espejos primarios y las parabólicas.",
+      },
+    ],
+  },
+  {
+    id: "s4",
+    titulo: "Funciones, gráficas y simetría",
+    preguntas: [
+      {
+        id: "s4q1",
+        q: "Si f(x) = x², ¿qué le ocurre a la gráfica al pasar a g(x) = f(x − 3) + 1?",
+        opts: [
+          "Se desplaza 3 unidades a la derecha y 1 hacia arriba",
+          "Se desplaza 3 a la izquierda y 1 hacia abajo",
+          "Se invierte respecto al eje x",
+        ],
+        correcta: 0,
+        explica: "Sustituir x por x − c desplaza c unidades a la derecha; sumar una constante al final desplaza hacia arriba.",
+      },
+      {
+        id: "s4q2",
+        q: "La función sen(x) cumple sen(−x) = −sen(x). Por tanto es…",
+        opts: ["Impar", "Par", "Ni par ni impar"],
+        correcta: 0,
+        explica: "Es la definición de función impar, y se ve en el círculo unidad: al reflejar el ángulo respecto al eje x, la coordenada y cambia de signo.",
+      },
+      {
+        id: "s4q3",
+        q: "Un pozo de potencial cumple U(x) = U(−x): misma energía a ambos lados del origen. Matemáticamente U es…",
+        opts: ["Una función par", "Una función impar", "Ni par ni impar"],
+        correcta: 0,
+        explica: "U(x) = U(−x) es literalmente la definición de función par. Esta simetría es la que después justifica que los estados propios tengan paridad definida en cuántica.",
+      },
+    ],
+  },
+  {
+    id: "s5",
+    titulo: "Composición de funciones",
+    preguntas: [
+      {
+        id: "s5q1",
+        q: "Si g convierte grados a radianes y f(x) = sen(x), ¿cuánto vale f(g(90))?",
+        opts: ["sen(π/2) = 1", "sen(90) tomando 90 como radianes", "90 radianes"],
+        correcta: 0,
+        explica: "g(90) = 90·π/180 = π/2 rad, y después f aplica el seno: sen(π/2) = 1. Es el error de calculadora más común: trabajar en el modo angular equivocado.",
+      },
+      {
+        id: "s5q2",
+        q: "En la composición f∘g, ¿qué función actúa primero sobre x?",
+        opts: ["g, la función interna", "f, la función externa", "Las dos a la vez"],
+        correcta: 0,
+        explica: "(f∘g)(x) = f(g(x)): x entra en g y su salida alimenta a f. Es una cadena de montaje, y el orden importa: f∘g ≠ g∘f en general.",
+      },
+      {
+        id: "s5q3",
+        q: "En caída libre, v(t) = g·t y Ec(v) = ½mv². Escribir Ec(t) = ½m(gt)² es un ejemplo de…",
+        opts: [
+          "Composición de funciones: la energía depende de v, que depende de t",
+          "Una simple multiplicación",
+          "Una función inversa",
+        ],
+        correcta: 0,
+        explica: "Encadenar magnitudes físicas que dependen unas de otras es composición pura. Más adelante, derivar esa cadena será la regla de la cadena.",
+      },
+    ],
+  },
+  {
+    id: "s6",
+    titulo: "Polinomios y raíces",
+    preguntas: [
+      {
+        id: "s6q1",
+        q: "En h(t) = At² + Bt + C, si el discriminante Δ = B² − 4AC es negativo, ¿qué ocurre?",
+        opts: [
+          "No hay ningún instante real en que la altura sea cero: la parábola no corta el eje t",
+          "El proyectil vuela para siempre",
+          "Hay dos instantes de impacto",
+        ],
+        correcta: 0,
+        explica: "Sin raíces reales la gráfica no toca el eje horizontal. Físicamente significa que, con esos coeficientes, el modelo nunca alcanza esa altura.",
+      },
+      {
+        id: "s6q2",
+        q: "Se lanza un objeto con h(t) = −4,9t² + 20t. ¿Qué representa la raíz positiva de h(t) = 0?",
+        opts: [
+          "El instante en que vuelve al nivel de partida",
+          "La altura máxima alcanzada",
+          "La velocidad de lanzamiento",
+        ],
+        correcta: 0,
+        explica: "Las raíces son los instantes de altura cero: t = 0 es el lanzamiento y la otra raíz, t ≈ 4,08 s, el aterrizaje.",
+      },
+      {
+        id: "s6q3",
+        q: "¿Qué representa el coeficiente A = −4,9 en h(t) = At² + Bt + C?",
+        opts: [
+          "La mitad de la gravedad, negativa porque apunta hacia abajo",
+          "La velocidad inicial",
+          "La altura inicial",
+        ],
+        correcta: 0,
+        explica: "h(t) = −½gt² + v₀t + h₀ y ½·9,8 = 4,9. El signo recoge que la aceleración va en sentido contrario al eje de alturas.",
+      },
+    ],
+  },
+  {
+    id: "s7",
+    titulo: "Trigonometría y el círculo",
+    preguntas: [
+      {
+        id: "s7q1",
+        q: "En el círculo unidad, el punto correspondiente al ángulo θ tiene coordenadas…",
+        opts: ["(cos θ, sen θ)", "(sen θ, cos θ)", "(θ, θ)"],
+        correcta: 0,
+        explica: "Es la definición moderna de seno y coseno: las proyecciones del punto sobre los ejes x e y. De ahí sale gratis cos²θ + sen²θ = 1.",
+      },
+      {
+        id: "s7q2",
+        q: "Un muelle oscila según x(t) = A·cos(ωt). Geométricamente, ese movimiento es…",
+        opts: [
+          "La proyección sobre un eje de un punto que gira uniformemente en un círculo de radio A",
+          "Una recta de pendiente A",
+          "Una parábola de altura A",
+        ],
+        correcta: 0,
+        explica: "El movimiento armónico simple es la sombra de un movimiento circular uniforme. Por eso toda la trigonometría reaparece en ondas y oscilaciones.",
+      },
+      {
+        id: "s7q3",
+        q: "Según la regla CPST, ¿en qué cuadrante son negativos a la vez el seno y el coseno?",
+        opts: ["Tercer cuadrante", "Primer cuadrante", "Segundo cuadrante"],
+        correcta: 0,
+        explica: "En el tercer cuadrante solo la tangente es positiva, al ser cociente de dos cantidades negativas.",
+      },
+    ],
+  },
+];
+
+const EXAMEN = [
+  {
+    id: "ex1",
+    q: "Una resistencia mide R = 100 Ω con tolerancia del 2 %. ¿Qué desigualdad la describe?",
+    opts: ["|R − 100| &lt; 2", "|R| &lt; 100", "R = 2"],
+    correcta: 0,
+    explica: "El 2 % de 100 Ω son 2 Ω de margen alrededor del valor nominal.",
+  },
+  {
+    id: "ex2",
+    q: "En una gráfica x(t), la pendiente de la recta que une dos instantes representa…",
+    opts: ["La velocidad media", "La posición inicial", "La aceleración instantánea"],
+    correcta: 0,
+    explica: "Δx/Δt es la definición de velocidad media, y es exactamente la pendiente.",
+  },
+  {
+    id: "ex3",
+    q: "¿Qué curva describe un balón lanzado al aire sin rozamiento?",
+    opts: ["Una parábola", "Una elipse", "Una hipérbola"],
+    correcta: 0,
+    explica: "Aceleración constante hacia abajo ⇒ posición cuadrática en el tiempo ⇒ parábola.",
+  },
+  {
+    id: "ex4",
+    q: "La órbita de la Tierra es una elipse y el Sol está…",
+    opts: ["En uno de sus focos", "En el centro", "En el eje menor"],
+    correcta: 0,
+    explica: "Primera ley de Kepler.",
+  },
+  {
+    id: "ex5",
+    q: "f(x) = x⁴ − 3x² + 1 es…",
+    opts: ["Una función par", "Una función impar", "Ni par ni impar"],
+    correcta: 0,
+    explica: "Solo tiene potencias pares de x, luego f(−x) = f(x).",
+  },
+  {
+    id: "ex6",
+    q: "En f(g(x)), ¿qué se calcula primero?",
+    opts: ["g(x)", "f(x)", "Da igual el orden"],
+    correcta: 0,
+    explica: "La función interna se evalúa primero y su salida entra en la externa.",
+  },
+  {
+    id: "ex7",
+    q: "Si el discriminante de la ecuación de altura es negativo, el modelo dice que el objeto…",
+    opts: [
+      "No alcanza esa altura en ningún instante real",
+      "Cae inmediatamente",
+      "Vuela indefinidamente",
+    ],
+    correcta: 0,
+    explica: "Sin raíces reales, la parábola no corta el eje de tiempos.",
+  },
+  {
+    id: "ex8",
+    q: "x(t) = A·cos(ωt) es la proyección de un punto que…",
+    opts: ["Gira uniformemente sobre un círculo", "Se mueve en línea recta", "Cae libremente"],
+    correcta: 0,
+    explica: "Movimiento circular uniforme proyectado = movimiento armónico simple.",
+  },
+];
+
+/* Todas las preguntas del tema, indexadas por id (lo usa el repaso espaciado) */
+const TODAS = [...ESTACIONES.flatMap((e) => e.preguntas), ...EXAMEN];
+const META = {
+  subject: "am1",
+  topic: "preliminares",
+  titulo: "Preliminares",
+  ruta: "tema-am1-01-preliminares.html",
+};
+
+const bancoAm1Preliminares = { ESTACIONES, EXAMEN, TODAS, META };
+
+/* ===== módulo: assets/js/banco.js ===== */
+/* ==========================================================================
+   REGISTRO DE BANCOS DE PREGUNTAS
+   Cada tema publicado registra aquí su módulo. La sesión de repaso lo usa
+   para recuperar el enunciado de cualquier pregunta pendiente.
+   Para añadir un tema nuevo: crea assets/js/banco/<asignatura>-<tema>.js
+   y añade una línea a REGISTRO.
+   ========================================================================== */
+
+const REGISTRO = {
+  "am1/preliminares": async () => bancoAm1Preliminares,
+};
+
+const cache = new Map();
+
+async function cargarBanco(subject, topic) {
+  const clave = `${subject}/${topic}`;
+  if (cache.has(clave)) return cache.get(clave);
+  const cargador = REGISTRO[clave];
+  if (!cargador) return null;
+  const modulo = await cargador();
+  cache.set(clave, modulo);
+  return modulo;
+}
+
+async function buscarPregunta(subject, topic, itemId) {
+  const banco = await cargarBanco(subject, topic);
+  if (!banco) return null;
+  return banco.TODAS.find((p) => p.id === itemId) || null;
+}
+
+/* Devuelve las preguntas completas correspondientes a una lista de pendientes
+   del repaso espaciado, descartando las que ya no existan en el banco. */
+async function hidratarPendientes(pendientes) {
+  const resultado = [];
+  for (const p of pendientes) {
+    const pregunta = await buscarPregunta(p.subject, p.topic, p.item);
+    if (pregunta) resultado.push({ ...p, pregunta });
+  }
+  return resultado;
+}
+
+async function metaDeTema(subject, topic) {
+  const banco = await cargarBanco(subject, topic);
+  return banco?.META || null;
+}
+
+const banco = { cargarBanco, buscarPregunta, hidratarPendientes, metaDeTema, REGISTRO };
+
+/* ============ LÓGICA DE ESTA PÁGINA ============ */
+
+
+
+await ui.arrancar("index");
+
+/* ---------- resumen global ---------- */
+function pintarResumen(){
+  const xp = store.xpTotal();
+  const nivel = store.nivelDe(xp);
+  const { correctas, total } = store.aciertos();
+  const rep = store.resumenRepaso();
+  const cont = document.getElementById("resumenGlobal");
+  cont.innerHTML = "";
+  const datos = [
+    { k:"Nivel", v:`${nivel.nivel} · ${nivel.titulo}` },
+    { k:"Experiencia", v:`${xp} XP` },
+    { k:"Preguntas superadas", v:`${correctas}` },
+    { k:"Dominadas a largo plazo", v:`${rep.dominadas}`, clase:"good" },
+    { k:"Días de estudio", v:`${store.diasActivos()}` },
+  ];
+  datos.forEach(d=>{
+    cont.appendChild(ui.el("div",{class:"stat"},
+      ui.el("span",{class:"k"}, d.k),
+      ui.el("span",{class:"v "+(d.clase||"")}, String(d.v))
+    ));
+  });
+}
+
+/* ---------- sesión de hoy ---------- */
+function siguienteTema(){
+  for (const [code, asig] of Object.entries(TEMARIOS)){
+    for (const tema of asig.temas){
+      if (tema.estado !== "publicado") continue;
+      const preguntas = tema.preguntas || 24; // estimación por tema
+      const p = store.progresoTema(code, tema.code, preguntas);
+      if (!p.completado) return { subjectCode: code, asig, tema, progreso: p };
+    }
+  }
+  return null;
+}
+
+function pintarHoy(){
+  const rep = store.resumenRepaso();
+  const siguiente = siguienteTema();
+  const titulo = document.getElementById("hoyTitulo");
+  const sub = document.getElementById("hoySub");
+  const acciones = document.getElementById("hoyAcciones");
+  const anillo = document.getElementById("hoyAnillo");
+  acciones.innerHTML = ""; anillo.innerHTML = "";
+
+  const pref = store.sesionPreferida();
+  const sesion = store.SESIONES.find(s=>s.id===pref) || store.SESIONES[1];
+
+  if (rep.pendientes > 0){
+    titulo.textContent = `Repaso: ${rep.pendientes} pregunta${rep.pendientes===1?"":"s"} esperando`;
+    const minutos = Math.max(1, Math.min(rep.pendientes, sesion.preguntas));
+    sub.textContent = `Empieza por aquí — son las que tu memoria está a punto de soltar. ${minutos === 1 ? "Es un minuto" : "Son unos " + minutos + " minutos"} y listo.`;
+    anillo.appendChild(ui.anillo(Math.min(100, Math.round(100*rep.dominadas/Math.max(1,rep.total))), 76, `${rep.pendientes}`));
+    acciones.appendChild(ui.el("a",{class:"btn primary", href:"repaso.html"},"Repasar ahora"));
+    if (siguiente) acciones.appendChild(ui.el("a",{class:"btn ghost small", href:siguiente.tema.ruta},"Seguir con el tema"));
+  } else if (siguiente){
+    titulo.textContent = siguiente.tema.titulo;
+    sub.textContent = `${siguiente.asig.nombre} · ${siguiente.progreso.correctas > 0 ? "continúa donde lo dejaste" : "tema nuevo"} — ${siguiente.tema.gancho}.`;
+    anillo.appendChild(ui.anillo(siguiente.progreso.porcentaje, 76));
+    acciones.appendChild(ui.el("a",{class:"btn primary", href:siguiente.tema.ruta}, siguiente.progreso.correctas>0 ? "Continuar" : "Empezar"));
+  } else {
+    titulo.textContent = "Todo al día";
+    sub.textContent = "No hay repasos pendientes y has completado el material publicado. El siguiente tema llega pronto.";
+    anillo.appendChild(ui.anillo(100, 76, "✓"));
+    acciones.appendChild(ui.el("a",{class:"btn ghost", href:"perfil.html"},"Ver mi progreso"));
+  }
+
+  const cont = document.getElementById("sesiones");
+  cont.innerHTML = "";
+  store.SESIONES.forEach(s=>{
+    const b = ui.el("button",{class:"sesion-btn", type:"button", "aria-pressed": String(s.id===pref)},
+      `${s.min} min · ${s.etiqueta.replace("Sesión ","")}`);
+    b.addEventListener("click", ()=>{ store.guardarSesionPreferida(s.id); pintarHoy(); });
+    cont.appendChild(b);
+  });
+}
+
+/* ---------- mapa del grado ---------- */
+function pintarMapa(){
+  const mapa = document.getElementById("mapa");
+  mapa.innerHTML = "";
+  CURSOS.forEach(curso=>{
+    const abiertas = curso.asignaturas.filter(a=>a.estado==="abierta").length;
+    const sec = ui.el("div",{class:"curso"});
+    sec.appendChild(ui.el("div",{class:"curso-head"},
+      ui.el("h2",{}, curso.nombre),
+      ui.el("span",{class:"meta"}, `${curso.asignaturas.length} asignaturas · ${abiertas} disponible${abiertas===1?"":"s"}`)
+    ));
+    const grid = ui.el("div",{class:"asignaturas"});
+    curso.asignaturas.forEach(a=>{
+      const abierta = a.estado==="abierta";
+      const temas = temasDe(a.code);
+      const publicados = temas.filter(t=>t.estado==="publicado").length;
+      const nodo = ui.el(abierta ? "a" : "div",
+        Object.assign({class:`asig ${abierta?"abierta":"cerrada"}`}, abierta ? {href:a.ruta} : {}),
+        ui.el("span",{class:"sem"}, a.sem === 0 ? "Anual" : `Semestre ${a.sem} · ${a.ects} ECTS`),
+        ui.el("h3",{}, a.nombre),
+        ui.el("div",{class:"foot"},
+          ui.el("span",{class: abierta ? "pill on" : "pill"}, abierta ? "Abierta" : "En construcción"),
+          abierta ? ui.el("span",{class:"prog"}, `${publicados}/${temas.length} temas`) : null
+        )
+      );
+      grid.appendChild(nodo);
+    });
+    sec.appendChild(grid);
+    mapa.appendChild(sec);
+  });
+}
+
+function pintarTodo(){ pintarResumen(); pintarHoy(); pintarMapa(); }
+pintarTodo();
+store.onCambio(()=>{ pintarResumen(); pintarHoy(); });
+ui.montarPie();
+
+</script>
+</body>
+</html>

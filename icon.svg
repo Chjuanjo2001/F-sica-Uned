@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-label="Física UNED">
+  <rect width="192" height="192" fill="#0a1210"/>
+  <g stroke="#16221d" stroke-width="1">
+    <path d="M16 0V192M32 0V192M48 0V192M64 0V192M80 0V192M96 0V192M112 0V192M128 0V192M144 0V192M160 0V192M176 0V192"/>
+    <path d="M0 16H192M0 32H192M0 48H192M0 64H192M0 80H192M0 96H192M0 112H192M0 128H192M0 144H192M0 160H192M0 176H192"/>
+  </g>
+  <circle cx="63" cy="96" r="36" fill="none" stroke="#3ddc97" stroke-width="7"/>
+  <path d="M63 96 L84 66" stroke="#3ddc97" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="84" cy="66" r="9" fill="#3ddc97"/>
+  <path d="M108 66 Q123 60 132 96 Q141 132 156 108" fill="none" stroke="#ffb454" stroke-width="8" stroke-linecap="round"/>
+</svg>
