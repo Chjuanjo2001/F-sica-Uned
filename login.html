@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entrar · Física UNED</title>
+<meta name="theme-color" content="#0a1210">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Literata:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<style>
+  .auth-wrap{ max-width:440px; margin:0 auto; padding:52px 20px 80px; }
+  .auth-wrap h1{ font-size:2.2rem; line-height:1; }
+  .auth-wrap h1 em{ font-style:normal; color:var(--accent); }
+  .tabs{ display:flex; gap:6px; margin:24px 0 18px; background:var(--bg-sunken); padding:5px; border-radius:10px; border:1px solid var(--line); }
+  .tabs button{
+    flex:1; border:0; background:transparent; color:var(--ink-dim); border-radius:7px; padding:9px;
+    font-family:'JetBrains Mono',monospace; font-size:0.74rem; text-transform:uppercase;
+    letter-spacing:0.06em; cursor:pointer; font-weight:700;
+  }
+  .tabs button[aria-selected="true"]{ background:var(--bg-elev); color:var(--accent); box-shadow:var(--shadow); }
+  form{ display:flex; flex-direction:column; gap:14px; }
+  .msg{ font-size:0.85rem; padding:11px 13px; border-radius:8px; display:none; }
+  .msg.show{ display:block; }
+  .msg.ok{ background:var(--accent-soft); border:1px solid var(--accent); }
+  .msg.err{ background:var(--bad-soft); border:1px solid var(--bad); color:var(--ink); }
+  .linkline{ text-align:center; font-size:0.82rem; margin-top:6px; }
+  .linkline button{ background:none; border:0; color:var(--accent); cursor:pointer; font-family:inherit; font-size:inherit; text-decoration:underline; padding:0; }
+</style>
+</head>
+<body>
+
+<main class="auth-wrap">
+  <span class="eyebrow">Física UNED</span>
+  <h1>Entra a tu <em>laboratorio</em></h1>
+
+  <div id="avisoLocal" hidden>
+    <div class="notice" style="margin-top:20px">
+      <b>Ahora mismo la web funciona en modo local.</b><br>
+      Tu progreso se guarda en este dispositivo y no hace falta cuenta para estudiar.
+      Cuando quieras sincronizar iPad y Mac, o abrir la web a más gente, configura Supabase siguiendo el README y esta pantalla se activará sola.
+    </div>
+    <div class="btn-row" style="margin-top:20px">
+      <a class="btn primary" href="index.html">Ir a estudiar</a>
+    </div>
+  </div>
+
+  <div id="zonaAuth" hidden>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tabEntrar" aria-selected="true">Entrar</button>
+      <button role="tab" id="tabRegistro" aria-selected="false">Crear cuenta</button>
+    </div>
+
+    <div class="msg" id="mensaje"></div>
+
+    <form id="formulario">
+      <div class="field" id="campoNombre" hidden>
+        <label for="nombre">Cómo quieres que te llame</label>
+        <input type="text" id="nombre" autocomplete="name" placeholder="Juan José">
+      </div>
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" autocomplete="email" required placeholder="tu@correo.com">
+      </div>
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" autocomplete="current-password" required minlength="6" placeholder="mínimo 6 caracteres">
+      </div>
+      <button class="btn primary" type="submit" id="botonEnviar">Entrar</button>
+      <div class="linkline">
+        <button type="button" id="olvide">He olvidado la contraseña</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script type="module">
+import * as store from "./assets/js/store.js";
+import * as ui from "./assets/js/ui.js";
+
+await ui.arrancar("login");
+
+const esLocal = store.modo() === "local";
+document.getElementById("avisoLocal").hidden = !esLocal;
+document.getElementById("zonaAuth").hidden = esLocal;
+
+if (!esLocal && store.usuario()) {
+  window.location.href = "index.html";
+}
+
+let modoRegistro = false;
+const tabEntrar = document.getElementById("tabEntrar");
+const tabRegistro = document.getElementById("tabRegistro");
+const campoNombre = document.getElementById("campoNombre");
+const boton = document.getElementById("botonEnviar");
+const mensaje = document.getElementById("mensaje");
+const password = document.getElementById("password");
+
+function setModo(registro){
+  modoRegistro = registro;
+  tabEntrar.setAttribute("aria-selected", String(!registro));
+  tabRegistro.setAttribute("aria-selected", String(registro));
+  campoNombre.hidden = !registro;
+  boton.textContent = registro ? "Crear cuenta" : "Entrar";
+  password.setAttribute("autocomplete", registro ? "new-password" : "current-password");
+  mostrar("");
+}
+tabEntrar.addEventListener("click", ()=>setModo(false));
+tabRegistro.addEventListener("click", ()=>setModo(true));
+
+function mostrar(texto, tipo="err"){
+  mensaje.textContent = texto;
+  mensaje.className = "msg " + (texto ? "show " + tipo : "");
+}
+
+document.getElementById("formulario").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById("email").value.trim();
+  const pass = password.value;
+  const nombre = document.getElementById("nombre").value.trim() || email.split("@")[0];
+  boton.disabled = true;
+  boton.textContent = "Un momento…";
+  try{
+    if (modoRegistro){
+      await store.registrarse(email, pass, nombre);
+      mostrar("Cuenta creada. Revisa tu correo si te pide confirmación y después entra con tus datos.", "ok");
+      setModo(false);
+    } else {
+      await store.entrar(email, pass);
+      window.location.href = "index.html";
+    }
+  } catch(err){
+    mostrar(err.message);
+  } finally {
+    boton.disabled = false;
+    boton.textContent = modoRegistro ? "Crear cuenta" : "Entrar";
+  }
+});
+
+document.getElementById("olvide").addEventListener("click", async ()=>{
+  const email = document.getElementById("email").value.trim();
+  if (!email) return mostrar("Escribe primero tu correo y vuelve a pulsar.");
+  try{
+    await store.recuperarContrasena(email);
+    mostrar("Te he enviado un correo para restablecer la contraseña.", "ok");
+  } catch(err){ mostrar(err.message); }
+});
+
+ui.montarPie();
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Repaso de hoy · Física UNED</title>
+<meta name="theme-color" content="#0a1210">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Literata:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/tema.css">
+<style>
+  .repaso-hero{ padding:38px 0 4px; }
+  .repaso-hero h1{ font-size:clamp(2rem,6vw,3rem); line-height:1; }
+  .repaso-hero h1 em{ font-style:normal; color:var(--accent); }
+  .repaso-hero .lead{ color:var(--ink-dim); max-width:56ch; margin-top:12px; }
+  .cajas{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-top:22px; }
+  .caja{
+    background:var(--bg-elev); border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .caja .k{ font-size:0.6rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--ink-dim); display:block; }
+  .caja .v{ font-size:1.4rem; font-weight:700; font-variant-numeric:tabular-nums; }
+  .origen{
+    font-family:'JetBrains Mono',monospace; font-size:0.63rem; text-transform:uppercase;
+    letter-spacing:0.05em; color:var(--accent-2); margin-bottom:6px; display:block;
+  }
+  .sesion-fin{
+    text-align:center; padding:34px 22px; border-radius:14px; border:1px solid var(--accent);
+    background:var(--accent-soft); margin-top:22px;
+  }
+  .sesion-fin h2{ font-size:1.5rem; }
+  .sesion-fin p{ max-width:52ch; margin:10px auto 0; color:var(--ink-dim); }
+</style>
+</head>
+<body>
+
+<main class="wrap narrow">
+  <section class="repaso-hero">
+    <span class="eyebrow">Memoria a largo plazo</span>
+    <h1>Repaso de <em>hoy</em></h1>
+    <p class="lead" id="lead">Cargando tu cola…</p>
+    <div class="cajas" id="cajas"></div>
+  </section>
+
+  <section id="zona"></section>
+</main>
+
+<script type="module">
+import * as store from "./assets/js/store.js";
+import * as ui from "./assets/js/ui.js";
+import { renderQuiz } from "./assets/js/quiz.js";
+import { hidratarPendientes, metaDeTema } from "./assets/js/banco.js";
+
+await ui.arrancar("repaso");
+
+const zona = document.getElementById("zona");
+const lead = document.getElementById("lead");
+
+function pintarCajas(){
+  const r = store.resumenRepaso();
+  const cajas = document.getElementById("cajas");
+  cajas.innerHTML = "";
+  [
+    { k:"Pendientes hoy", v:r.pendientes },
+    { k:"En rodaje", v:r.flojas },
+    { k:"Dominadas", v:r.dominadas },
+    { k:"Total vistas", v:r.total },
+  ].forEach(d=>{
+    cajas.appendChild(ui.el("div",{class:"caja"},
+      ui.el("span",{class:"k"}, d.k), ui.el("span",{class:"v"}, String(d.v))));
+  });
+}
+
+async function arrancarSesion(){
+  pintarCajas();
+  zona.innerHTML = "";
+
+  const pref = store.sesionPreferida();
+  const sesion = store.SESIONES.find(s=>s.id===pref) || store.SESIONES[1];
+  const pendientes = store.pendientesDeRepaso(sesion.preguntas);
+
+  if (!pendientes.length){
+    lead.textContent = "No hay nada pendiente ahora mismo. Cuando toque consolidar algo, aparecerá aquí solo.";
+    zona.appendChild(ui.el("div",{class:"sesion-fin"},
+      ui.el("h2",{},"Cola vacía"),
+      ui.el("p",{},"Tu memoria va al día. Puedes avanzar con un tema nuevo o dejarlo aquí: mañana volverá a haber algo que consolidar."),
+      ui.el("div",{class:"btn-row", style:"justify-content:center; margin-top:18px"},
+        ui.el("a",{class:"btn primary", href:"asignatura.html?code=am1"},"Ir a Cálculo I"),
+        ui.el("a",{class:"btn ghost", href:"index.html"},"Volver al inicio")
+      )
+    ));
+    return;
+  }
+
+  const hidratadas = await hidratarPendientes(pendientes);
+  if (!hidratadas.length){
+    lead.textContent = "Las preguntas pendientes pertenecen a temas que ya no están disponibles.";
+    return;
+  }
+
+  lead.innerHTML = `Tienes <b>${pendientes.length}</b> pregunta${pendientes.length===1?"":"s"} lista${pendientes.length===1?"":"s"} para consolidar, en una sesión de unos <b>${sesion.min} minutos</b>. Fallar aquí es parte del método: lo que se te resista volverá antes.`;
+
+  // Agrupamos por tema para dar contexto
+  const porTema = {};
+  hidratadas.forEach(p=>{ (porTema[`${p.subject}/${p.topic}`] ||= []).push(p); });
+
+  for (const [claveTema, items] of Object.entries(porTema)){
+    const [subject, topic] = claveTema.split("/");
+    const meta = await metaDeTema(subject, topic);
+    const panel = ui.el("div",{class:"panel", style:"margin-top:20px"});
+    panel.appendChild(ui.el("div",{class:"panel-head"},
+      ui.el("div",{class:"titles"},
+        ui.el("span",{class:"origen"}, meta ? `Cálculo I · ${meta.titulo}` : claveTema),
+        ui.el("h2",{}, `${items.length} pregunta${items.length===1?"":"s"} de repaso`)
+      )
+    ));
+    const cuerpo = ui.el("div",{class:"panel-body"});
+    const contenedor = ui.el("div",{class:"quiz", style:"border-top:0; padding-top:0"});
+    cuerpo.appendChild(contenedor);
+    panel.appendChild(cuerpo);
+    zona.appendChild(panel);
+
+    renderQuiz(contenedor, {
+      subject, topic,
+      preguntas: items.map(i=>({
+        id: i.pregunta.id, q: i.pregunta.q, opts: i.pregunta.opts,
+        correcta: i.pregunta.correcta, explica: i.pregunta.explica,
+      })),
+      esRepaso: true,
+      xpPorPregunta: 4,
+      onFin: () => { pintarCajas(); mostrarCierre(); },
+    });
+  }
+}
+
+let cierreMostrado = false;
+function mostrarCierre(){
+  if (cierreMostrado) return;
+  cierreMostrado = true;
+  const fin = ui.el("div",{class:"sesion-fin"},
+    ui.el("h2",{},"Sesión terminada"),
+    ui.el("p",{},"Hecho. Lo que has fallado vuelve en un par de días y lo que has acertado se aleja en el calendario. Esto es exactamente lo que hace que en junio no tengas que empezar de cero."),
+    ui.el("div",{class:"btn-row", style:"justify-content:center; margin-top:18px"},
+      ui.el("a",{class:"btn primary", href:"index.html"},"Volver al inicio"),
+      ui.el("a",{class:"btn ghost", href:"perfil.html"},"Ver mi progreso")
+    )
+  );
+  zona.appendChild(fin);
+  fin.scrollIntoView({ behavior:"smooth", block:"center" });
+}
+
+arrancarSesion();
+ui.montarPie();
+</script>
+</body>
+</html>
