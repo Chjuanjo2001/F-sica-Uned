@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Estilos de las estaciones de estudio, laboratorios interactivos y tests
+   ========================================================================== */
+
+/* ===== Preguntas ===== */
+.quiz{ margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+.quiz-item{ margin-bottom:18px; }
+.quiz-item .q{
+  font-family:'JetBrains Mono',monospace; font-size:0.88rem; margin-bottom:10px;
+  display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;
+}
+.quiz-item .q .idx{ color:var(--accent); flex:none; }
+.opts{ display:grid; gap:8px; }
+.opt{
+  text-align:left; border:1px solid var(--line); background:var(--bg-elev); color:var(--ink);
+  border-radius:9px; padding:12px 14px; cursor:pointer; font-size:0.9rem;
+  font-family:'Literata',serif; line-height:1.45; min-height:46px;
+  transition:border-color .15s ease, background .15s ease;
+}
+.opt:hover:not(:disabled){ border-color:var(--accent); }
+.opt.correct{ border-color:var(--good); background:var(--accent-soft); }
+.opt.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+.opt:disabled{ cursor:default; }
+.explain{
+  font-size:0.85rem; color:var(--ink-dim); margin-top:9px; padding:10px 12px;
+  background:var(--bg-sunken); border-radius:8px; border-left:3px solid var(--accent); display:none;
+}
+.explain.show{ display:block; }
+.review-note{
+  margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+  color:var(--accent); letter-spacing:0.02em;
+}
+.xp-pop{
+  font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--good);
+  font-weight:700; margin-left:8px;
+}
+
+/* ===== Resultado de examen ===== */
+.exam-result{
+  margin-top:20px; padding:26px 20px; border-radius:12px; text-align:center;
+  border:1px solid var(--accent); background:var(--accent-soft);
+}
+.exam-result.again{ border-color:var(--accent-2); background:var(--accent-2-soft); }
+.exam-ring{
+  width:74px; height:74px; border-radius:50%; margin:0 auto 12px; display:flex;
+  align-items:center; justify-content:center; font-size:2rem; background:var(--bg-elev);
+  border:2px solid var(--accent);
+}
+.exam-result.again .exam-ring{ border-color:var(--accent-2); }
+.exam-result h3{ font-size:1.4rem; }
+.exam-result p{ margin:8px auto 0; max-width:52ch; color:var(--ink-dim); font-size:0.92rem; }
+
+/* ===== Estaciones del tema ===== */
+.station{
+  background:var(--bg-elev); border:1px solid var(--line); border-radius:14px;
+  margin-top:22px; overflow:hidden; box-shadow:var(--shadow); scroll-margin-top:90px;
+}
+.station-head{
+  display:flex; align-items:center; gap:14px; padding:16px 20px;
+  border-bottom:1px solid var(--line); background:var(--bg-sunken);
+}
+.station-num{
+  font-family:'Big Shoulders Display',sans-serif; font-weight:800; font-size:1.6rem;
+  color:var(--accent); min-width:2ch;
+}
+.station-head .titles{ flex:1; min-width:0; }
+.station-head h2{ font-size:1.4rem; }
+.station-head .tag{
+  font-family:'JetBrains Mono',monospace; font-size:0.64rem; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-2); margin-top:3px; display:block;
+}
+.check{
+  width:30px; height:30px; border-radius:50%; border:2px solid var(--line); flex:none;
+  display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:transparent;
+  transition:all .2s ease;
+}
+.check.done{ border-color:var(--good); background:var(--accent-soft); color:var(--good); }
+.station-body{ padding:20px; }
+.station-body h3{ font-size:1rem; margin:22px 0 10px; }
+.formula-block{
+  display:block; text-align:center; font-size:1.05rem; padding:12px;
+  margin:12px 0; background:var(--bg-sunken); border:1px solid var(--line); border-radius:8px;
+  font-family:'JetBrains Mono',monospace; overflow-x:auto;
+}
+
+/* ===== Laboratorios interactivos ===== */
+.widget{
+  background:var(--bg-sunken); border:1px solid var(--line); border-radius:10px;
+  padding:14px; margin:14px 0 6px;
+}
+.widget canvas{
+  display:block; width:100%; touch-action:none; background:var(--bg-elev);
+  border-radius:8px; border:1px solid var(--line);
+}
+.controls{ display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; }
+.controls .field{ min-width:150px; flex:1; }
+.readout{
+  display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:12px;
+  padding-top:12px; border-top:1px dashed var(--line);
+}
+.readout div{ font-family:'JetBrains Mono',monospace; font-size:0.82rem; }
+.readout .k{ color:var(--ink-dim); display:block; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.06em; }
+.readout .v{ font-weight:700; font-variant-numeric:tabular-nums; }
+.readout .v.good{ color:var(--good); }
+.readout .v.bad{ color:var(--bad); }
+
+/* ===== Navegación entre estaciones ===== */
+.stationnav{ display:flex; gap:8px; overflow-x:auto; padding:16px 0 6px; -webkit-overflow-scrolling:touch; }
+.stationnav a{
+  flex:none; text-decoration:none; color:var(--ink-dim); font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem; letter-spacing:0.05em; text-transform:uppercase; border:1px solid var(--line);
+  border-radius:20px; padding:7px 13px; white-space:nowrap; background:var(--bg-elev);
+}
+.stationnav a.done{ color:var(--accent); border-color:var(--accent); }
+
+/* ===== Osciloscopio de cabecera ===== */
+.scope{
+  background:var(--scope-bg); border-radius:12px; border:1px solid var(--line);
+  box-shadow:var(--shadow); padding:10px;
+}
+.scope canvas{ display:block; width:100%; border-radius:6px; }
+.scope .caption{
+  font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#7fe0bd;
+  letter-spacing:0.08em; padding:6px 4px 2px; text-transform:uppercase;
+}
+
+/* ===== Cabecera del tema ===== */
+.tema-hero{ padding:34px 0 8px; }
+.tema-hero h1{ font-size:clamp(2rem,6vw,3.2rem); line-height:1; }
+.tema-hero h1 em{ font-style:normal; color:var(--accent); }
+.tema-hero .lead{ color:var(--ink-dim); font-size:1.05rem; max-width:56ch; margin-top:14px; }
+.hero-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:26px; align-items:center; margin-top:20px; }
+@media (max-width:760px){ .hero-grid{ grid-template-columns:1fr; } }
+.quote{
+  font-style:italic; color:var(--ink-dim); border-left:3px solid var(--accent-2);
+  padding:4px 0 4px 16px; margin:22px 0 0; font-size:0.93rem; max-width:58ch;
+}
+.quote cite{
+  display:block; font-style:normal; font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem; margin-top:4px;
+}
