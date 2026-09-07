@@ -886,8 +886,8 @@ const TEMARIOS = {
       "Cálculo de una variable mirado siempre desde la física: cinemática, campos, ondas y órbitas.",
     temas: [
       { code: "preliminares", n: 1,  titulo: "Preliminares",                             gancho: "Números, rectas, cónicas, funciones y trigonometría", estado: "publicado", ruta: "tema-am1-01-preliminares.html", preguntas: 21 },
-      { code: "limites",      n: 2,  titulo: "Límites y continuidad",                     gancho: "El instante en el cálculo de velocidades",           estado: "pendiente" },
-      { code: "derivadas",    n: 3,  titulo: "Diferenciación",                            gancho: "La derivada como razón de cambio física",            estado: "pendiente" },
+      { code: "limites",      n: 2,  titulo: "Límites y continuidad",                     gancho: "El instante en el cálculo de velocidades",           estado: "publicado", ruta: "tema-am1-02-limites.html", preguntas: 21 },
+      { code: "derivadas",    n: 3,  titulo: "Diferenciación",                            gancho: "La derivada como razón de cambio física",            estado: "publicado", ruta: "tema-am1-03-derivadas.html", preguntas: 21 },
       { code: "trascendentes",n: 4,  titulo: "Funciones trascendentes",                   gancho: "Crecimiento exponencial, desintegración radiactiva", estado: "pendiente" },
       { code: "aplic-deriv",  n: 5,  titulo: "Aplicaciones de las derivadas",             gancho: "Optimización y razones de cambio relacionadas",      estado: "pendiente" },
       { code: "integracion",  n: 6,  titulo: "Integración",                               gancho: "De la velocidad a la posición",                      estado: "pendiente" },
@@ -1789,6 +1789,8 @@ const quiz = { renderQuiz, progresoDeTema };
    y la cola de repaso espaciado se guardan usando ese id.
    ========================================================================== */
 
+const bancoAm1Preliminares = (() => {
+
 const ESTACIONES = [
   {
     id: "s1",
@@ -2097,7 +2099,638 @@ const META = {
   ruta: "tema-am1-01-preliminares.html",
 };
 
-const bancoAm1Preliminares = { ESTACIONES, EXAMEN, TODAS, META };
+return { ESTACIONES, EXAMEN, TODAS, META };
+
+})();
+
+/* ===== módulo: assets/js/banco/am1-limites.js ===== */
+/* ==========================================================================
+   BANCO DE PREGUNTAS — Análisis Matemático I · Tema 2: Límites y continuidad
+   Fuente: Capítulo 1 del libro de la asignatura (UNED).
+   Cada pregunta lleva un id estable: no cambiarlo nunca, porque el progreso
+   y la cola de repaso espaciado se guardan usando ese id.
+   ========================================================================== */
+
+const bancoAm1Limites = (() => {
+
+const ESTACIONES = [
+  {
+    id: "l1",
+    titulo: "Velocidad media y velocidad instantánea",
+    preguntas: [
+      {
+        id: "l1q1",
+        q: "Una piedra cae según y = 4,9t² m. ¿Cuál es su velocidad media entre t = 1 s y t = 2 s?",
+        opts: ["14,7 m/s", "9,8 m/s", "4,9 m/s", "19,6 m/s"],
+        correcta: 0,
+        explica: "v̄ = Δy/Δt = [4,9(2²) − 4,9(1²)]/(2−1) = (19,6 − 4,9)/1 = 14,7 m/s — el mismo cálculo del Ejemplo 1 del libro.",
+      },
+      {
+        id: "l1q2",
+        q: "Para hallar la velocidad instantánea en t = 1 s, el libro construye el cociente [4,9(1+h)² − 4,9]/h y reduce h hacia 0. ¿A qué valor se acerca ese cociente?",
+        opts: ["9,8 m/s", "4,9 m/s", "0 m/s", "19,6 m/s"],
+        correcta: 0,
+        explica: "Simplificando (Ejemplo 3): el cociente vale 9,8 + 4,9h, que tiende a 9,8 cuando h→0. Es la velocidad instantánea en t = 1 s.",
+      },
+      {
+        id: "l1q3",
+        q: "La velocidad instantánea de la piedra en el instante t, obtenida como límite del cociente de Newton, es v(t) = 9,8t. ¿Por qué no basta con sustituir h = 0 directamente en el cociente original?",
+        opts: [
+          "Porque eso implicaría dividir por cero: el cociente 0/0 no está definido sin simplificar antes",
+          "Porque 9,8t solo vale para t = 1",
+          "Porque la piedra deja de caer en h = 0",
+        ],
+        correcta: 0,
+        explica: "El cociente de Newton tiene h en el denominador. Antes de poder evaluar h = 0 hay que simplificar algebraicamente (factorizar, cancelar) para eliminar esa división prohibida.",
+      },
+    ],
+  },
+  {
+    id: "l2",
+    titulo: "Cálculo algebraico de límites",
+    preguntas: [
+      {
+        id: "l2q1",
+        q: "Para f(x) = (x² − 1)/(x − 1), factorizando el numerador se obtiene f(x) = x + 1 para x ≠ 1. ¿Cuánto vale lím<sub>x→1</sub> f(x)?",
+        opts: ["2", "0", "1", "No existe"],
+        correcta: 0,
+        explica: "Aunque f(1) no está definida (0/0), el límite existe: lím f(x) = lím (x+1) = 2 (Ejemplo 1, Sección 1.2). La gráfica tiene un 'agujero' en (1,2), no una barrera.",
+      },
+      {
+        id: "l2q2",
+        q: "La biomasa de un cultivo de algas se mide como m(t). La tasa media de crecimiento entre el día 10 y el día 40 es exactamente…",
+        opts: [
+          "La pendiente de la recta secante que une los puntos (10, m(10)) y (40, m(40))",
+          "El valor de m en el día 25",
+          "La derivada segunda de m",
+        ],
+        correcta: 0,
+        explica: "Δm/Δt es, por definición, la pendiente de la secante entre esos dos puntos de la gráfica — el mismo principio que la velocidad media en cinemática.",
+      },
+      {
+        id: "l2q3",
+        q: "Para calcular lím<sub>x→4</sub> (√x − 2)/(x² − 16), el libro multiplica numerador y denominador por el conjugado √x + 2. ¿Qué consigue con eso?",
+        opts: [
+          "Eliminar la raíz del numerador para poder cancelar el factor (x − 4) que anula el denominador",
+          "Convertir el límite en una suma",
+          "Cambiar el punto donde se calcula el límite",
+        ],
+        correcta: 0,
+        explica: "(√x−2)(√x+2) = x−4, que cancela con el (x−4) oculto en x²−16 = (x−4)(x+4). Así desaparece la indeterminación 0/0 (Ejemplo 4c, Sección 1.2).",
+      },
+    ],
+  },
+  {
+    id: "l3",
+    titulo: "Límites laterales",
+    preguntas: [
+      {
+        id: "l3q1",
+        q: "La fuerza de rozamiento cinético sobre un bloque es F = −μN·sgn(v), que cambia bruscamente de signo según la dirección del movimiento. ¿Qué describe mejor esta situación en el lenguaje de los límites?",
+        opts: [
+          "sgn(v) tiene límites laterales distintos en v = 0 (−1 por la izquierda, 1 por la derecha), así que no existe el límite bilateral",
+          "sgn(v) es continua en v = 0",
+          "El límite de sgn(v) en v = 0 vale 0",
+        ],
+        correcta: 0,
+        explica: "lím<sub>v→0⁻</sub> sgn(v) = −1 y lím<sub>v→0⁺</sub> sgn(v) = 1 (Ejemplo 6, Sección 1.2). Como no coinciden, no existe lím<sub>v→0</sub> sgn(v): la fricción cinética no está definida en reposo exacto.",
+      },
+      {
+        id: "l3q2",
+        q: "Según el Teorema 1 del libro, una función f(x) tiene límite L en x = a si y solo si…",
+        opts: [
+          "Existen los límites laterales por la izquierda y por la derecha, y ambos son iguales a L",
+          "f(a) está definida",
+          "f es un polinomio",
+        ],
+        correcta: 0,
+        explica: "lím<sub>x→a</sub> f(x) = L ⟺ lím<sub>x→a⁻</sub> f(x) = lím<sub>x→a⁺</sub> f(x) = L (Teorema 1). Es la condición exacta que usa el ejemplo de la fricción.",
+      },
+      {
+        id: "l3q3",
+        q: "Para f(x) = |x−2|/(x²+x−6), el libro obtiene lím<sub>x→2⁺</sub> f(x) = 1/5 y lím<sub>x→2⁻</sub> f(x) = −1/5. ¿Qué se concluye sobre lím<sub>x→2</sub> f(x)?",
+        opts: [
+          "No existe, porque los límites laterales no coinciden",
+          "Vale 1/5",
+          "Vale 0"],
+        correcta: 0,
+        explica: "Como en el caso de sgn(v), límites laterales distintos (1/5 ≠ −1/5) significan que el límite bilateral no existe (Ejemplo 7, Sección 1.2).",
+      },
+    ],
+  },
+  {
+    id: "l4",
+    titulo: "Límites en el infinito",
+    preguntas: [
+      {
+        id: "l4q1",
+        q: "Un paracaidista en caída libre con rozamiento del aire se aproxima a una velocidad terminal constante cuando t → ∞. ¿Qué representa esto en el lenguaje del cálculo?",
+        opts: [
+          "Una asíntota horizontal: v(t) tiende a un límite finito L cuando t tiende a infinito",
+          "Una asíntota vertical",
+          "Una discontinuidad evitable",
+        ],
+        correcta: 0,
+        explica: "lím<sub>t→∞</sub> v(t) = L (velocidad terminal) es exactamente la definición de asíntota horizontal (Definición 3, Sección 1.3): la gráfica se acerca a la recta y = L sin cruzarla necesariamente.",
+      },
+      {
+        id: "l4q2",
+        q: "Según el resumen del libro sobre funciones racionales P<sub>m</sub>(x)/Q<sub>n</sub>(x) cuando x→±∞: si el grado del numerador es MENOR que el del denominador (m &lt; n), el límite es…",
+        opts: ["0", "a<sub>m</sub>/b<sub>n</sub>", "∞"],
+        correcta: 0,
+        explica: "Cuando m < n, el denominador crece más rápido y domina: el límite es 0 (resumen tras el Ejemplo 4, Sección 1.3).",
+      },
+      {
+        id: "l4q3",
+        q: "Para f(x) = x/√(x²+1), el libro demuestra que lím<sub>x→∞</sub> f(x) = 1 y lím<sub>x→−∞</sub> f(x) = −1. ¿Cuántas asíntotas horizontales tiene la gráfica?",
+        opts: ["Dos: y = 1 e y = −1", "Una: y = 1", "Ninguna"],
+        correcta: 0,
+        explica: "Al ser distintos los límites en +∞ y en −∞ (Ejemplo 2, Sección 1.3), la curva tiene dos asíntotas horizontales, una a cada lado.",
+      },
+    ],
+  },
+  {
+    id: "l5",
+    titulo: "Límites infinitos",
+    preguntas: [
+      {
+        id: "l5q1",
+        q: "La ley de Coulomb da un campo eléctrico E(r) = k·q/r² creado por una carga puntual. ¿Qué ocurre con lím<sub>r→0</sub> E(r)?",
+        opts: [
+          "Es un límite infinito: E(r) crece sin cota cuando r se acerca a 0 por cualquier lado",
+          "Vale 0",
+          "Vale k·q",
+        ],
+        correcta: 0,
+        explica: "Es la misma estructura que 1/x² del Ejemplo 6 de la Sección 1.3: lím<sub>x→0</sub> 1/x² = ∞. El eje r = 0 es una asíntota vertical del campo.",
+      },
+      {
+        id: "l5q2",
+        q: "Para f(x) = 1/x, el libro distingue lím<sub>x→0⁺</sub> f(x) = ∞ de lím<sub>x→0⁻</sub> f(x) = −∞. ¿Qué significa esto físicamente si f representara, por ejemplo, la fuerza entre dos placas al acercarse a distancia cero por un lado u otro?",
+        opts: [
+          "El signo del límite infinito depende del lado por el que x se aproxima a 0",
+          "El límite es siempre +∞, sin importar el lado",
+          "No existen los límites laterales en este caso",
+        ],
+        correcta: 0,
+        explica: "Ejemplo 7 de la Sección 1.3: por la derecha 1/x → ∞, por la izquierda 1/x → −∞. Los límites laterales infinitos sí 'existen' en sentido simbólico, pero son distintos.",
+      },
+      {
+        id: "l5q3",
+        q: "¿Por qué '∞' no se puede tratar como un número normal al escribir lím<sub>x→0</sub> 1/x² = ∞?",
+        opts: [
+          "Porque solo es una notación que describe que los valores crecen sin cota, no un límite que realmente exista como número",
+          "Porque el límite en realidad vale cero",
+          "Porque ∞ es igual a −∞",
+        ],
+        correcta: 0,
+        explica: "El libro insiste: escribir esto no equivale a decir que el límite existe. Es una forma útil de describir un comportamiento, no un valor numérico real (Sección 1.3).",
+      },
+    ],
+  },
+  {
+    id: "l6",
+    titulo: "Continuidad",
+    preguntas: [
+      {
+        id: "l6q1",
+        q: "La función de Heaviside H(x), que modela un interruptor que se enciende en t = 0, es continua por la derecha en 0 pero no por la izquierda. ¿Qué significa 'continua por la derecha' según la Definición 5?",
+        opts: [
+          "Que lím<sub>x→0⁺</sub> H(x) = H(0)",
+          "Que H(x) = 0 para todo x",
+          "Que H es continua en todo punto",
+        ],
+        correcta: 0,
+        explica: "Continuidad por la derecha en c significa lím<sub>x→c⁺</sub> f(x) = f(c) (Definición 5). El interruptor 'ya está encendido' exactamente en el instante en que se activa.",
+      },
+      {
+        id: "l6q2",
+        q: "Un patrón de difracción tiene intensidad proporcional a f(x) = sen(x)/x, que no está definida en x = 0. Como lím<sub>x→0</sub> sen(x)/x = 1 (Ejercicio 47, Sección 1.2), ¿qué tipo de discontinuidad tiene f en 0?",
+        opts: [
+          "Evitable: basta con definir f(0) = 1 para que quede continua",
+          "De salto, no se puede evitar",
+          "No es una discontinuidad, f ya es continua en 0",
+        ],
+        correcta: 0,
+        explica: "Como el límite existe (vale 1) pero f(0) no está definida, es una discontinuidad evitable (Sección 1.4): se define F(0)=1 y se obtiene la extensión continua.",
+      },
+      {
+        id: "l6q3",
+        q: "Según el Teorema 6 del libro, si f y g son continuas en c, ¿cuál de estas combinaciones NO se garantiza continua en c sin una condición adicional?",
+        opts: [
+          "f/g, a menos que se exija además g(c) ≠ 0",
+          "f + g",
+          "f · g",
+        ],
+        correcta: 0,
+        explica: "El cociente f/g es continuo en c siempre que g(c) ≠ 0 (Teorema 6, apartado 4) — si el denominador se anula ahí, la continuidad no está garantizada.",
+      },
+    ],
+  },
+  {
+    id: "l7",
+    titulo: "Teorema Max-Min, Valor Medio y bisección",
+    preguntas: [
+      {
+        id: "l7q1",
+        q: "Con 200 m de valla se busca el área máxima de un campo rectangular. El libro obtiene A(x) = 100x − x², cuyo máximo es A = 2500 m² en x = 50. ¿Qué teorema garantiza de antemano que ese máximo existe?",
+        opts: [
+          "El Teorema Max-Min: toda función continua en un intervalo cerrado y finito alcanza un máximo y un mínimo absolutos",
+          "El Teorema del Sándwich",
+          "El Teorema 1 de límites laterales",
+        ],
+        correcta: 0,
+        explica: "A(x) es continua en el intervalo cerrado [0,100], así que el Teorema 8 (Max-Min) garantiza que existe un máximo absoluto, antes incluso de calcularlo completando el cuadrado.",
+      },
+      {
+        id: "l7q2",
+        q: "Dos cargas eléctricas fijas crean un potencial neto V(x) a lo largo de una recta, con V(a) &gt; 0 y V(b) &lt; 0 en dos puntos a y b. ¿Qué garantiza el Teorema del Valor Medio (de continuidad) sobre el punto de equilibrio V = 0?",
+        opts: [
+          "Que existe al menos un punto c entre a y b donde V(c) = 0, siempre que V sea continua en [a,b]",
+          "Que V(x) = 0 para todo x entre a y b",
+          "Que no puede existir ningún punto de equilibrio",
+        ],
+        correcta: 0,
+        explica: "El Teorema 9 asegura que una función continua toma todos los valores intermedios entre V(a) y V(b) — en particular el 0, si V(a) y V(b) tienen signos opuestos.",
+      },
+      {
+        id: "l7q3",
+        q: "El método de la bisección para resolver x³ − x − 1 = 0 en [1,2] (Ejemplo 12) divide el intervalo por la mitad en cada paso y se queda con la mitad donde la función cambia de signo. ¿Por qué funciona este método?",
+        opts: [
+          "Porque f es continua y cambia de signo en los extremos de cada subintervalo, así que el Teorema del Valor Medio garantiza una raíz dentro",
+          "Porque f es un polinomio de grado impar",
+          "Porque el intervalo [1,2] tiene longitud 1",
+        ],
+        correcta: 0,
+        explica: "En cada bisección se conserva la propiedad de signos opuestos en los extremos; como f es continua, el TVM asegura que la raíz sigue atrapada en esa mitad — así el intervalo se estrecha hasta la precisión deseada.",
+      },
+    ],
+  },
+];
+
+const EXAMEN = [
+  {
+    id: "lex1",
+    q: "La velocidad instantánea de una piedra en caída libre y = 4,9t² se define como…",
+    opts: ["El límite de la velocidad media cuando el intervalo de tiempo tiende a cero", "La velocidad media en cualquier intervalo", "4,9 m/s siempre"],
+    correcta: 0,
+    explica: "v(t) = lím<sub>h→0</sub> [y(t+h) − y(t)]/h — la definición de velocidad instantánea como límite del cociente de Newton.",
+  },
+  {
+    id: "lex2",
+    q: "Para f(x) = x² − 1)/(x − 1), el límite cuando x→1 existe aunque f(1) no esté definida. Esto ilustra que…",
+    opts: ["El límite de f en un punto no depende del valor de f en ese punto", "f(1) siempre debe estar definida para que exista el límite", "El límite es siempre igual a f(a)"],
+    correcta: 0,
+    explica: "El libro lo remarca expresamente: lím<sub>x→a</sub> f(x) no depende de f(a), incluso cuando f(a) existe.",
+  },
+  {
+    id: "lex3",
+    q: "La fuerza de rozamiento F = −μN·sgn(v) no tiene límite en v = 0 porque…",
+    opts: ["Los límites laterales por la izquierda y por la derecha son distintos (−μN y μN)", "μN vale cero", "sgn(v) es continua en 0"],
+    correcta: 0,
+    explica: "sgn(v) salta de −1 a 1 en v=0: límites laterales distintos ⇒ no existe el límite bilateral.",
+  },
+  {
+    id: "lex4",
+    q: "Si la velocidad terminal de un paracaidista es 55 m/s, esto se expresa en cálculo como…",
+    opts: ["lím<sub>t→∞</sub> v(t) = 55", "lím<sub>t→0</sub> v(t) = 55", "v(t) = 55 para todo t"],
+    correcta: 0,
+    explica: "Es un límite en el infinito: la velocidad se aproxima a 55 m/s a medida que t crece indefinidamente, sin necesariamente alcanzarlo en tiempo finito.",
+  },
+  {
+    id: "lex5",
+    q: "El campo eléctrico de una carga puntual, E(r) = kq/r², cumple lím<sub>r→0</sub> E(r) = ∞. Esto es un ejemplo de…",
+    opts: ["Límite infinito (asíntota vertical en r = 0)", "Límite en el infinito", "Discontinuidad evitable"],
+    correcta: 0,
+    explica: "Al igual que 1/x², el campo crece sin cota cuando r→0: es un límite infinito, con asíntota vertical en r=0.",
+  },
+  {
+    id: "lex6",
+    q: "La función de Heaviside H(x) (un interruptor que se enciende en x=0) es discontinua en x=0 porque…",
+    opts: ["Sus límites laterales en 0 no coinciden: 0 por la izquierda, 1 por la derecha", "H(0) no está definida", "H es discontinua en todo punto"],
+    correcta: 0,
+    explica: "lím<sub>x→0⁻</sub> H(x) = 0 ≠ 1 = lím<sub>x→0⁺</sub> H(x): al no coincidir los límites laterales, H no es continua en 0 (aunque sí es continua por la derecha).",
+  },
+  {
+    id: "lex7",
+    q: "sen(x)/x no está definida en x=0, pero lím<sub>x→0</sub> sen(x)/x = 1. Se dice que tiene una discontinuidad…",
+    opts: ["Evitable: se puede redefinir el valor en ese punto para lograr continuidad", "De salto, imposible de evitar", "Infinita"],
+    correcta: 0,
+    explica: "Como el límite existe, basta con definir f(0)=1 para obtener la extensión continua — es una discontinuidad evitable.",
+  },
+  {
+    id: "lex8",
+    q: "Para hallar dónde se anula el potencial eléctrico neto de dos cargas, el método de la bisección funciona porque…",
+    opts: ["El Teorema del Valor Medio garantiza una raíz en cualquier subintervalo donde la función continua cambie de signo", "El potencial siempre es cero en el punto medio", "Las cargas eléctricas son discontinuas"],
+    correcta: 0,
+    explica: "Cada bisección conserva el cambio de signo en los extremos; como la función es continua, el TVM asegura que la raíz sigue dentro de esa mitad, estrechando el intervalo hasta la precisión buscada.",
+  },
+];
+
+const TODAS = [...ESTACIONES.flatMap((e) => e.preguntas), ...EXAMEN];
+const META = {
+  subject: "am1",
+  topic: "limites",
+  titulo: "Límites y continuidad",
+  ruta: "tema-am1-02-limites.html",
+};
+
+return { ESTACIONES, EXAMEN, TODAS, META };
+
+})();
+
+/* ===== módulo: assets/js/banco/am1-derivadas.js ===== */
+/* ==========================================================================
+   BANCO DE PREGUNTAS — Análisis Matemático I · Tema 3: Diferenciación
+   Fuente: Capítulo 2 del libro de la asignatura (UNED).
+   Cada pregunta lleva un id estable: no cambiarlo nunca, porque el progreso
+   y la cola de repaso espaciado se guardan usando ese id.
+   ========================================================================== */
+
+const bancoAm1Derivadas = (() => {
+
+const ESTACIONES = [
+  {
+    id: "d1",
+    titulo: "El cociente de Newton",
+    preguntas: [
+      {
+        id: "d1q1",
+        q: "La energía potencial de un oscilador es U(x) = x² (julios, x en metros). Con el cociente de Newton, la pendiente de U en x₀ = 1 es…",
+        opts: ["2", "1", "0", "4"],
+        correcta: 0,
+        explica: "lím<sub>h→0</sub> [(1+h)² − 1]/h = lím (2+h) = 2 — igual que el Ejemplo 1 del libro con y = x².",
+      },
+      {
+        id: "d1q2",
+        q: "Para f(x) = x^(1/3), el cociente de Newton en x = 0 tiende a infinito. ¿Qué significa esto para la gráfica?",
+        opts: ["Que el eje y es tangente vertical en el origen", "Que no hay tangente en absoluto", "Que la función es discontinua en 0"],
+        correcta: 0,
+        explica: "Cuando el límite del cociente de Newton es +∞ o −∞, sí hay tangente: es la recta vertical x = x₀ (Definición 2, Sección 2.1).",
+      },
+      {
+        id: "d1q3",
+        q: "Un potencial en forma de 'V', U(x) = |x|, modela una pared rígida en x = 0. Justo ahí, la fuerza F = −dU/dx…",
+        opts: ["No está definida: los límites laterales del cociente de Newton no coinciden", "Vale exactamente 0", "Vale +1 siempre"],
+        correcta: 0,
+        explica: "El cociente de Newton de |x| en 0 es sgn(h): +1 por la derecha, −1 por la izquierda. Al no coincidir, no existe derivada ahí (Ejemplo 4, Sección 2.1).",
+      },
+    ],
+  },
+  {
+    id: "d2",
+    titulo: "La derivada y la notación de Leibniz",
+    preguntas: [
+      {
+        id: "d2q1",
+        q: "Un cuerpo permanece en reposo: su posición x(t) es constante. ¿Cuánto vale v(t) = x′(t)?",
+        opts: ["0", "1", "x", "Depende de t"],
+        correcta: 0,
+        explica: "La derivada de una función constante es 0 (Ejemplo 1, Sección 2.2): sin cambio de posición no hay velocidad.",
+      },
+      {
+        id: "d2q2",
+        q: "Según la Tabla 1 del libro, la derivada de √x es…",
+        opts: ["1/(2√x)", "2√x", "1/x²", "√x/2"],
+        correcta: 0,
+        explica: "d/dx √x = 1/(2√x) para x &gt; 0 — calculada racionalizando el cociente de Newton (Ejemplo 2c).",
+      },
+      {
+        id: "d2q3",
+        q: "En la diferenciación gráfica, si la curva x(t) está bajando (pendiente negativa) en un instante t₀, ¿qué indica eso sobre v(t₀)?",
+        opts: ["v(t₀) es negativa", "v(t₀) es positiva", "v(t₀) es cero"],
+        correcta: 0,
+        explica: "La pendiente de x(t) en t₀ ES v(t₀). Si la curva desciende, la velocidad es negativa: el objeto retrocede.",
+      },
+    ],
+  },
+  {
+    id: "d3",
+    titulo: "Sumas, productos y cocientes",
+    preguntas: [
+      {
+        id: "d3q1",
+        q: "La posición de una partícula es x(t) = 2t³ − 5t² + 4t + 7. Aplicando la regla de la suma, v(t) es…",
+        opts: ["6t² − 10t + 4", "2t² − 5t + 4", "6t³ − 10t² + 4t"],
+        correcta: 0,
+        explica: "d/dt(2t³−5t²+4t+7) = 6t² − 10t + 4, exactamente como el Ejemplo 1(a) de la Sección 2.3.",
+      },
+      {
+        id: "d3q2",
+        q: "Con f(t) = t²+1 y g(t) = t³+4 representando dos magnitudes cuyo producto es una energía E(t) = f(t)g(t), la Regla del Producto da E′(t) =",
+        opts: ["5t⁴ + 3t² + 8t", "2t·3t²", "6t⁵"],
+        correcta: 0,
+        explica: "E′ = f′g + fg′ = 2t(t³+4) + (t²+1)(3t²) = 5t⁴+3t²+8t — igual que expandir el polinomio y derivar (Ejemplo 3).",
+      },
+      {
+        id: "d3q3",
+        q: "Un potencial de interacción es U(x) = 1/(x²+1). Con la Regla de la Inversa, U′(x) es…",
+        opts: ["−2x/(x²+1)²", "1/(2x)", "2x/(x²+1)"],
+        correcta: 0,
+        explica: "(1/f)′ = −f′/f² con f = x²+1, f′ = 2x: U′(x) = −2x/(x²+1)² (Ejemplo 7a, Sección 2.3).",
+      },
+    ],
+  },
+  {
+    id: "d4",
+    titulo: "La Regla de la Cadena",
+    preguntas: [
+      {
+        id: "d4q1",
+        q: "Para y = √(x²+1), la Regla de la Cadena da y′(x) =",
+        opts: ["x/√(x²+1)", "1/(2√(x²+1))", "2x√(x²+1)"],
+        correcta: 0,
+        explica: "Externa √u con u = x²+1: y′ = [1/(2√u)]·(2x) = x/√(x²+1) (Ejemplo 2, Sección 2.4).",
+      },
+      {
+        id: "d4q2",
+        q: "Según el Ejemplo 3(a) del libro, d/dx (7x−3)¹⁰ =",
+        opts: ["70(7x−3)⁹", "10(7x−3)⁹", "10(7x−3)⁹·7x"],
+        correcta: 0,
+        explica: "Externa u¹⁰ con u = 7x−3: derivada = 10(7x−3)⁹·7 = 70(7x−3)⁹.",
+      },
+      {
+        id: "d4q3",
+        q: "Un engranaje A gira 3 vueltas por cada vuelta de B, y B gira 4 vueltas por cada vuelta de C. ¿Cuántas vueltas da A por cada vuelta de C?",
+        opts: ["12", "7", "3,5"],
+        correcta: 0,
+        explica: "Las tasas se multiplican en cadena: 3·4 = 12, igual que dy/dx = (dy/du)(du/dx).",
+      },
+    ],
+  },
+  {
+    id: "d5",
+    titulo: "Derivadas trigonométricas",
+    preguntas: [
+      {
+        id: "d5q1",
+        q: "Según el Teorema 9 del libro, d/dx sen x =",
+        opts: ["cos x", "−cos x", "−sen x"],
+        correcta: 0,
+        explica: "d/dx sen x = cos x (Teorema 9), a partir de lím (sen h)/h = 1 y lím (cos h − 1)/h = 0.",
+      },
+      {
+        id: "d5q2",
+        q: "Un oscilador tiene posición x(t) = A·cos(ωt). ¿Cuál es su velocidad v(t) = dx/dt?",
+        opts: ["−Aω·sen(ωt)", "A·sen(ωt)", "Aω·cos(ωt)"],
+        correcta: 0,
+        explica: "Por la Regla de la Cadena, d/dt cos(ωt) = −ω·sen(ωt), así que v(t) = −Aω·sen(ωt).",
+      },
+      {
+        id: "d5q3",
+        q: "En el movimiento armónico simple, la aceleración a(t) se relaciona con la posición x(t) mediante…",
+        opts: ["a(t) = −ω²·x(t)", "a(t) = ω²·x(t)", "a(t) es siempre constante"],
+        correcta: 0,
+        explica: "a(t) = −Aω²cos(ωt) = −ω²x(t): la ecuación d²y/dt² + ω²y = 0 que verifica el Ejemplo 3 de la Sección 2.8.",
+      },
+    ],
+  },
+  {
+    id: "d6",
+    titulo: "El Teorema del Valor Medio",
+    preguntas: [
+      {
+        id: "d6q1",
+        q: "Un coche recorre 150 km en 2 horas. Según el Teorema del Valor Medio, ¿qué se puede afirmar con certeza?",
+        opts: [
+          "El coche alcanzó exactamente 75 km/h en algún instante del trayecto",
+          "El coche viajó siempre a 75 km/h",
+          "El coche nunca superó los 75 km/h",
+        ],
+        correcta: 0,
+        explica: "La velocidad media es 75 km/h. El TVM garantiza que la velocidad instantánea coincidió con esa media en al menos un instante.",
+      },
+      {
+        id: "d6q2",
+        q: "Para f(x) = x³ − 12x + 1, f′(x) = 3(x−2)(x+2). ¿En qué intervalo es f decreciente?",
+        opts: ["(−2, 2)", "(−∞, −2)", "(2, ∞)"],
+        correcta: 0,
+        explica: "f′(x) es negativa entre −2 y 2, así que f decrece en (−2, 2) (Ejemplo 4, Sección 2.6).",
+      },
+      {
+        id: "d6q3",
+        q: "Si la velocidad de un objeto es negativa y su aceleración también es negativa, el objeto está…",
+        opts: [
+          "Moviéndose a la izquierda, cada vez más rápido",
+          "Moviéndose a la derecha y acelerando",
+          "En reposo",
+        ],
+        correcta: 0,
+        explica: "Velocidad y aceleración con el mismo signo: el objeto se mueve a la izquierda y el módulo de su velocidad aumenta (Tabla 2, Sección 2.11).",
+      },
+    ],
+  },
+  {
+    id: "d7",
+    titulo: "Orden superior, velocidad y caída libre",
+    preguntas: [
+      {
+        id: "d7q1",
+        q: "Para y(t) = −4,9t² + 8t + 10 (objeto lanzado desde un tejado), la velocidad v(t) = y′(t) es…",
+        opts: ["−9,8t + 8", "−4,9t + 8", "9,8t − 8"],
+        correcta: 0,
+        explica: "d/dt(−4,9t²+8t+10) = −9,8t + 8, con las reglas de la suma y de la potencia (Ejemplo 3, Sección 2.11).",
+      },
+      {
+        id: "d7q2",
+        q: "La aceleración de ese mismo objeto, a(t) = y″(t), es…",
+        opts: ["−9,8 (constante)", "−9,8t", "8"],
+        correcta: 0,
+        explica: "a(t) = d/dt(−9,8t+8) = −9,8 m/s² — la aceleración de la gravedad, constante durante todo el vuelo.",
+      },
+      {
+        id: "d7q3",
+        q: "Si conocemos y″(t) = −g y las condiciones iniciales y(0)=y₀, y′(0)=v₀, ¿qué operación permite reconstruir y(t) por completo?",
+        opts: [
+          "Calcular dos primitivas sucesivas y fijar las constantes con los datos iniciales",
+          "Derivar dos veces más",
+          "Multiplicar dos veces por g",
+        ],
+        correcta: 0,
+        explica: "Como en el Ejemplo 4 de la Sección 2.11: se integra y″=−g una vez (constante C₁=v₀) y otra vez (constante C₂=y₀), dando y(t) = −½gt² + v₀t + y₀.",
+      },
+    ],
+  },
+];
+
+const EXAMEN = [
+  {
+    id: "dex1",
+    q: "El cociente de Newton para f(x) = x² en un punto general x₀ es (2x₀h+h²)/h. Al tomar el límite h→0, f′(x₀) =",
+    opts: ["2x₀", "x₀²", "2"],
+    correcta: 0,
+    explica: "lím<sub>h→0</sub>(2x₀+h) = 2x₀ — la fórmula general que confirma que la derivada de x² es 2x.",
+  },
+  {
+    id: "dex2",
+    q: "Según la Tabla 1 del libro, la derivada de 1/x es",
+    opts: ["−1/x²", "1/x²", "−1/x"],
+    correcta: 0,
+    explica: "d/dx(1/x) = −1/x² (x≠0), obtenida racionalizando el cociente de Newton (Ejemplo 2b, Sección 2.2).",
+  },
+  {
+    id: "dex3",
+    q: "Con la Regla del Cociente, la derivada de y = (1−x²)/(1+x²) es",
+    opts: ["−4x/(1+x²)²", "4x/(1+x²)²", "−2x/(1+x²)"],
+    correcta: 0,
+    explica: "dy/dx = [(1+x²)(−2x)−(1−x²)(2x)]/(1+x²)² = −4x/(1+x²)² (Ejemplo 9a, Sección 2.3).",
+  },
+  {
+    id: "dex4",
+    q: "Si dy/du = 5 y du/dx = −2, la Regla de la Cadena da dy/dx =",
+    opts: ["−10", "3", "−2,5"],
+    correcta: 0,
+    explica: "dy/dx = (dy/du)·(du/dx) = 5·(−2) = −10: las tasas se multiplican en cadena.",
+  },
+  {
+    id: "dex5",
+    q: "d/dx tan x =",
+    opts: ["sec²x", "−csc²x", "sec x·tan x"],
+    correcta: 0,
+    explica: "Con la Regla del Cociente sobre tan x = sen x/cos x se obtiene d/dx tan x = sec²x (Ejemplo 4, Sección 2.5).",
+  },
+  {
+    id: "dex6",
+    q: "El Teorema de Rolle es el caso particular del Teorema del Valor Medio en el que…",
+    opts: [
+      "La cuerda entre a y b tiene pendiente 0, porque f(a) = f(b)",
+      "f no es continua",
+      "El intervalo [a,b] es infinito",
+    ],
+    correcta: 0,
+    explica: "Si g(a)=g(b), la cuerda es horizontal, así que el TVM garantiza un punto c con g′(c)=0: eso es el Teorema de Rolle.",
+  },
+  {
+    id: "dex7",
+    q: "La aceleración de un objeto en movimiento es la derivada de…",
+    opts: [
+      "La velocidad (es decir, la segunda derivada de la posición)",
+      "La posición",
+      "El tiempo",
+    ],
+    correcta: 0,
+    explica: "a(t) = dv/dt = d²x/dt² — la aceleración es la derivada de la velocidad y, por tanto, la segunda derivada de la posición.",
+  },
+  {
+    id: "dex8",
+    q: "Para la circunferencia x²+y²=25, diferenciando implícitamente se obtiene dy/dx = −x/y. En el punto (3,−4), la pendiente vale",
+    opts: ["3/4", "−3/4", "4/3"],
+    correcta: 0,
+    explica: "dy/dx en (3,−4) es −3/(−4) = 3/4 — el mismo resultado que despejar y = −√(25−x²) y derivar explícitamente (Ejemplo 2, Sección 2.9).",
+  },
+];
+
+const TODAS = [...ESTACIONES.flatMap((e) => e.preguntas), ...EXAMEN];
+const META = {
+  subject: "am1",
+  topic: "derivadas",
+  titulo: "Diferenciación",
+  ruta: "tema-am1-03-derivadas.html",
+};
+
+return { ESTACIONES, EXAMEN, TODAS, META };
+
+})();
 
 /* ===== módulo: assets/js/banco.js ===== */
 /* ==========================================================================
@@ -2110,6 +2743,8 @@ const bancoAm1Preliminares = { ESTACIONES, EXAMEN, TODAS, META };
 
 const REGISTRO = {
   "am1/preliminares": async () => bancoAm1Preliminares,
+  "am1/limites": async () => bancoAm1Limites,
+  "am1/derivadas": async () => bancoAm1Derivadas,
 };
 
 const cache = new Map();
@@ -2150,8 +2785,7 @@ const banco = { cargarBanco, buscarPregunta, hidratarPendientes, metaDeTema, REG
 
 /* ============ LÓGICA DE ESTA PÁGINA ============ */
 
-
-
+const { ESTACIONES, EXAMEN, META } = bancoAm1Preliminares;
 
 await ui.arrancar("");
 

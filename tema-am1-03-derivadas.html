@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Entrar · Física UNED</title>
+<title>Diferenciación · Cálculo I</title>
 <meta name="theme-color" content="#0a1210">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -304,23 +304,148 @@ footer.appfoot a{ color:var(--ink-dim); }
 
 </style>
 <style>
-  .auth-wrap{ max-width:440px; margin:0 auto; padding:52px 20px 80px; }
-  .auth-wrap h1{ font-size:2.2rem; line-height:1; }
-  .auth-wrap h1 em{ font-style:normal; color:var(--accent); }
-  .tabs{ display:flex; gap:6px; margin:24px 0 18px; background:var(--bg-sunken); padding:5px; border-radius:10px; border:1px solid var(--line); }
-  .tabs button{
-    flex:1; border:0; background:transparent; color:var(--ink-dim); border-radius:7px; padding:9px;
-    font-family:'JetBrains Mono',monospace; font-size:0.74rem; text-transform:uppercase;
-    letter-spacing:0.06em; cursor:pointer; font-weight:700;
-  }
-  .tabs button[aria-selected="true"]{ background:var(--bg-elev); color:var(--accent); box-shadow:var(--shadow); }
-  form{ display:flex; flex-direction:column; gap:14px; }
-  .msg{ font-size:0.85rem; padding:11px 13px; border-radius:8px; display:none; }
-  .msg.show{ display:block; }
-  .msg.ok{ background:var(--accent-soft); border:1px solid var(--accent); }
-  .msg.err{ background:var(--bad-soft); border:1px solid var(--bad); color:var(--ink); }
-  .linkline{ text-align:center; font-size:0.82rem; margin-top:6px; }
-  .linkline button{ background:none; border:0; color:var(--accent); cursor:pointer; font-family:inherit; font-size:inherit; text-decoration:underline; padding:0; }
+/* ==========================================================================
+   Estilos de las estaciones de estudio, laboratorios interactivos y tests
+   ========================================================================== */
+
+/* ===== Preguntas ===== */
+.quiz{ margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+.quiz-item{ margin-bottom:18px; }
+.quiz-item .q{
+  font-family:'JetBrains Mono',monospace; font-size:0.88rem; margin-bottom:10px;
+  display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;
+}
+.quiz-item .q .idx{ color:var(--accent); flex:none; }
+.opts{ display:grid; gap:8px; }
+.opt{
+  text-align:left; border:1px solid var(--line); background:var(--bg-elev); color:var(--ink);
+  border-radius:9px; padding:12px 14px; cursor:pointer; font-size:0.9rem;
+  font-family:'Literata',serif; line-height:1.45; min-height:46px;
+  transition:border-color .15s ease, background .15s ease;
+}
+.opt:hover:not(:disabled){ border-color:var(--accent); }
+.opt.correct{ border-color:var(--good); background:var(--accent-soft); }
+.opt.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+.opt:disabled{ cursor:default; }
+.explain{
+  font-size:0.85rem; color:var(--ink-dim); margin-top:9px; padding:10px 12px;
+  background:var(--bg-sunken); border-radius:8px; border-left:3px solid var(--accent); display:none;
+}
+.explain.show{ display:block; }
+.review-note{
+  margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+  color:var(--accent); letter-spacing:0.02em;
+}
+.xp-pop{
+  font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--good);
+  font-weight:700; margin-left:8px;
+}
+
+/* ===== Resultado de examen ===== */
+.exam-result{
+  margin-top:20px; padding:26px 20px; border-radius:12px; text-align:center;
+  border:1px solid var(--accent); background:var(--accent-soft);
+}
+.exam-result.again{ border-color:var(--accent-2); background:var(--accent-2-soft); }
+.exam-ring{
+  width:74px; height:74px; border-radius:50%; margin:0 auto 12px; display:flex;
+  align-items:center; justify-content:center; font-size:2rem; background:var(--bg-elev);
+  border:2px solid var(--accent);
+}
+.exam-result.again .exam-ring{ border-color:var(--accent-2); }
+.exam-result h3{ font-size:1.4rem; }
+.exam-result p{ margin:8px auto 0; max-width:52ch; color:var(--ink-dim); font-size:0.92rem; }
+
+/* ===== Estaciones del tema ===== */
+.station{
+  background:var(--bg-elev); border:1px solid var(--line); border-radius:14px;
+  margin-top:22px; overflow:hidden; box-shadow:var(--shadow); scroll-margin-top:90px;
+}
+.station-head{
+  display:flex; align-items:center; gap:14px; padding:16px 20px;
+  border-bottom:1px solid var(--line); background:var(--bg-sunken);
+}
+.station-num{
+  font-family:'Big Shoulders Display',sans-serif; font-weight:800; font-size:1.6rem;
+  color:var(--accent); min-width:2ch;
+}
+.station-head .titles{ flex:1; min-width:0; }
+.station-head h2{ font-size:1.4rem; }
+.station-head .tag{
+  font-family:'JetBrains Mono',monospace; font-size:0.64rem; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-2); margin-top:3px; display:block;
+}
+.check{
+  width:30px; height:30px; border-radius:50%; border:2px solid var(--line); flex:none;
+  display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:transparent;
+  transition:all .2s ease;
+}
+.check.done{ border-color:var(--good); background:var(--accent-soft); color:var(--good); }
+.station-body{ padding:20px; }
+.station-body h3{ font-size:1rem; margin:22px 0 10px; }
+.formula-block{
+  display:block; text-align:center; font-size:1.05rem; padding:12px;
+  margin:12px 0; background:var(--bg-sunken); border:1px solid var(--line); border-radius:8px;
+  font-family:'JetBrains Mono',monospace; overflow-x:auto;
+}
+
+/* ===== Laboratorios interactivos ===== */
+.widget{
+  background:var(--bg-sunken); border:1px solid var(--line); border-radius:10px;
+  padding:14px; margin:14px 0 6px;
+}
+.widget canvas{
+  display:block; width:100%; touch-action:none; background:var(--bg-elev);
+  border-radius:8px; border:1px solid var(--line);
+}
+.controls{ display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; }
+.controls .field{ min-width:150px; flex:1; }
+.readout{
+  display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:12px;
+  padding-top:12px; border-top:1px dashed var(--line);
+}
+.readout div{ font-family:'JetBrains Mono',monospace; font-size:0.82rem; }
+.readout .k{ color:var(--ink-dim); display:block; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.06em; }
+.readout .v{ font-weight:700; font-variant-numeric:tabular-nums; }
+.readout .v.good{ color:var(--good); }
+.readout .v.bad{ color:var(--bad); }
+
+/* ===== Navegación entre estaciones ===== */
+.stationnav{ display:flex; gap:8px; overflow-x:auto; padding:16px 0 6px; -webkit-overflow-scrolling:touch; }
+.stationnav a{
+  flex:none; text-decoration:none; color:var(--ink-dim); font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem; letter-spacing:0.05em; text-transform:uppercase; border:1px solid var(--line);
+  border-radius:20px; padding:7px 13px; white-space:nowrap; background:var(--bg-elev);
+}
+.stationnav a.done{ color:var(--accent); border-color:var(--accent); }
+
+/* ===== Osciloscopio de cabecera ===== */
+.scope{
+  background:var(--scope-bg); border-radius:12px; border:1px solid var(--line);
+  box-shadow:var(--shadow); padding:10px;
+}
+.scope canvas{ display:block; width:100%; border-radius:6px; }
+.scope .caption{
+  font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#7fe0bd;
+  letter-spacing:0.08em; padding:6px 4px 2px; text-transform:uppercase;
+}
+
+/* ===== Cabecera del tema ===== */
+.tema-hero{ padding:34px 0 8px; }
+.tema-hero h1{ font-size:clamp(2rem,6vw,3.2rem); line-height:1; }
+.tema-hero h1 em{ font-style:normal; color:var(--accent); }
+.tema-hero .lead{ color:var(--ink-dim); font-size:1.05rem; max-width:56ch; margin-top:14px; }
+.hero-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:26px; align-items:center; margin-top:20px; }
+@media (max-width:760px){ .hero-grid{ grid-template-columns:1fr; } }
+.quote{
+  font-style:italic; color:var(--ink-dim); border-left:3px solid var(--accent-2);
+  padding:4px 0 4px 16px; margin:22px 0 0; font-size:0.93rem; max-width:58ch;
+}
+.quote cite{
+  display:block; font-style:normal; font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem; margin-top:4px;
+}
+
 </style>
 <!-- Diagnóstico de arranque: avisa en pantalla si faltan archivos en el servidor -->
 <script>
@@ -359,47 +484,237 @@ footer.appfoot a{ color:var(--ink-dim); }
 </head>
 <body>
 
-<main class="auth-wrap">
-  <span class="eyebrow">Física UNED</span>
-  <h1>Entra a tu <em>laboratorio</em></h1>
+<main class="wrap narrow">
 
-  <div id="avisoLocal" hidden>
-    <div class="notice" style="margin-top:20px">
-      <b>Ahora mismo la web funciona en modo local.</b><br>
-      Tu progreso se guarda en este dispositivo y no hace falta cuenta para estudiar.
-      Cuando quieras sincronizar iPad y Mac, o abrir la web a más gente, configura Supabase siguiendo el README y esta pantalla se activará sola.
+  <section class="tema-hero">
+    <span class="eyebrow">Cálculo I · Tema 03 · Capítulo 2</span>
+    <h1>Derivadas:<br>la <em>máquina</em><br>de cambiar.</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lead">Todo lo que en física llamamos velocidad, fuerza, potencia o aceleración es la misma pregunta matemática repetida: ¿a qué ritmo cambia una cantidad respecto a otra? La derivada convierte esa pregunta en una herramienta de cálculo, con siete estaciones desde el cociente de Newton hasta la caída libre.</p>
+        <div class="quote">«La respuesta a la Gran Pregunta de la Vida, el Universo y el Todo es... cuarenta y dos.»
+          <cite>Douglas Adams · Guía del autoestopista galáctico</cite>
+        </div>
+        <div class="btn-row" style="margin-top:22px">
+          <button class="btn primary" id="btnEmpezar">Empezar donde lo dejé</button>
+          <a class="btn ghost" href="#examen">Ir al examen</a>
+        </div>
+      </div>
+      <div class="scope">
+        <canvas id="heroCanvas" width="360" height="250"></canvas>
+        <div class="caption">osc·03 — oscilador armónico</div>
+      </div>
     </div>
-    <div class="btn-row" style="margin-top:20px">
-      <a class="btn primary" href="index.html">Ir a estudiar</a>
+    <nav class="stationnav" id="stationNav"></nav>
+  </section>
+
+  <!-- ===================== ESTACIÓN 1 ===================== -->
+  <section class="station" id="d1" data-est="d1">
+    <div class="station-head">
+      <div class="station-num">01</div>
+      <div class="titles"><h2>El cociente de Newton</h2><span class="tag">▸ De la secante a la fuerza</span></div>
+      <div class="check" data-check="d1">✓</div>
     </div>
-  </div>
+    <div class="station-body">
+      <p>La derivada es el mismo límite del cociente de Newton que ya usamos para la velocidad, pero ahora lo aplicamos a cualquier función. En un oscilador con energía potencial U(x), la <b>fuerza</b> es F(x) = −dU/dx: el negativo de la pendiente de U.</p>
+      <span class="formula-block">f′(x₀) = lím<sub>h→0</sub> [f(x₀+h) − f(x₀)] / h</span>
+      <div class="callout"><span class="eyebrow">Cuando no hay tangente</span><br>Un potencial en forma de "V", U(x) = |x|, modela una pared rígida en x = 0. Ahí la fuerza no está definida: los límites laterales del cociente de Newton no coinciden — el equivalente matemático de un choque instantáneo.</div>
 
-  <div id="zonaAuth" hidden>
-    <div class="tabs" role="tablist">
-      <button role="tab" id="tabEntrar" aria-selected="true">Entrar</button>
-      <button role="tab" id="tabRegistro" aria-selected="false">Crear cuenta</button>
+      <h3>Laboratorio · pendiente de U(x) = x²</h3>
+      <div class="widget">
+        <canvas id="cv1" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>x₀ (m) <b id="lab1x0">0.6</b></label><input type="range" id="s1x0" min="-15" max="15" step="1" value="6"></div>
+          <div class="field"><label>h (separación P–Q) <b id="lab1h">1.60</b></label><input type="range" id="s1h" min="1" max="160" step="1" value="160"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">Pendiente secante</span><span class="v" id="out1m">—</span></div>
+          <div><span class="k">Límite exacto (2x₀)</span><span class="v good" id="out1lim">—</span></div>
+        </div>
+      </div>
+      <div class="quiz" data-quiz="d1"></div>
     </div>
+  </section>
 
-    <div class="msg" id="mensaje"></div>
+  <!-- ===================== ESTACIÓN 2 ===================== -->
+  <section class="station" id="d2" data-est="d2">
+    <div class="station-head">
+      <div class="station-num">02</div>
+      <div class="titles"><h2>La derivada y la notación de Leibniz</h2><span class="tag">▸ De x(t) a v(t)</span></div>
+      <div class="check" data-check="d2">✓</div>
+    </div>
+    <div class="station-body">
+      <p>La función f′ se puede dibujar leyendo pendientes directamente sobre la gráfica de f — la <b>diferenciación gráfica</b>. En cinemática es literal: si x(t) es la posición, v(t) = dx/dt es la pendiente de x(t) en cada instante.</p>
+      <span class="formula-block">dy/dx = lím<sub>Δx→0</sub> Δy/Δx</span>
 
-    <form id="formulario">
-      <div class="field" id="campoNombre" hidden>
-        <label for="nombre">Cómo quieres que te llame</label>
-        <input type="text" id="nombre" autocomplete="name" placeholder="Juan José">
+      <h3>Laboratorio · traza v(t) leyendo pendientes</h3>
+      <div class="widget">
+        <canvas id="cv2" width="760" height="300"></canvas>
+        <div class="controls">
+          <div class="field"><label>t (marcador) <b id="lab2t">-1.60</b></label><input type="range" id="s2t" min="-220" max="220" step="1" value="-160"></div>
+          <button class="btn small" id="btn2clear">🧹 Borrar traza</button>
+        </div>
+        <div class="readout">
+          <div><span class="k">v(t) = pendiente de x(t)</span><span class="v" id="out2v">—</span></div>
+        </div>
       </div>
-      <div class="field">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" autocomplete="email" required placeholder="tu@correo.com">
+      <div class="quiz" data-quiz="d2"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 3 ===================== -->
+  <section class="station" id="d3" data-est="d3">
+    <div class="station-head">
+      <div class="station-num">03</div>
+      <div class="titles"><h2>Sumas, productos y cocientes</h2><span class="tag">▸ Potencia = fuerza × velocidad</span></div>
+      <div class="check" data-check="d3">✓</div>
+    </div>
+    <div class="station-body">
+      <p>La Regla del Producto <b>no</b> es multiplicar las derivadas: (fg)′ = f′g + fg′. El libro la demuestra con un rectángulo de área uv: un pequeño cambio produce tres franjas, (Δu)v + u(Δv) + (Δu)(Δv).</p>
+      <span class="formula-block">(fg)′(x) = f′(x)g(x) + f(x)g′(x)</span>
+      <div class="callout"><span class="eyebrow">La Regla de la Inversa en la naturaleza</span><br>La Ley de Coulomb y la Gravitación Universal tienen la forma 1/r². d/dx[1/(x²+1)] = −2x/(x²+1)² es exactamente ese tipo de cálculo con la Regla de la Inversa.</div>
+
+      <h3>Laboratorio · demostración gráfica, P = F·v</h3>
+      <div class="widget">
+        <canvas id="cv3" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>Fuerza F (N) <b id="lab3f">60</b></label><input type="range" id="s3f" min="10" max="95" step="1" value="60"></div>
+          <div class="field"><label>Velocidad v (m/s) <b id="lab3v">40</b></label><input type="range" id="s3v" min="10" max="75" step="1" value="40"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">P = F·v</span><span class="v" id="out3p">—</span></div>
+          <div><span class="k">≈ (ΔF)v + F(Δv) — parte lineal</span><span class="v" id="out3lin">—</span></div>
+        </div>
       </div>
-      <div class="field">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" autocomplete="current-password" required minlength="6" placeholder="mínimo 6 caracteres">
+      <div class="quiz" data-quiz="d3"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 4 ===================== -->
+  <section class="station" id="d4" data-est="d4">
+    <div class="station-head">
+      <div class="station-num">04</div>
+      <div class="titles"><h2>La Regla de la Cadena</h2><span class="tag">▸ Engranajes: multiplicar tasas</span></div>
+      <div class="check" data-check="d4">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Si A gira r<sub>B</sub> vueltas por cada vuelta de B, y B gira r<sub>C</sub> vueltas por cada vuelta de C, entonces A gira r<sub>B</sub>·r<sub>C</sub> vueltas por cada vuelta de C — exactamente la multiplicación de tasas de la Regla de la Cadena.</p>
+      <span class="formula-block">d/dx f(g(x)) = f′(g(x)) · g′(x)  ⟺  dy/dx = (dy/du)·(du/dx)</span>
+
+      <h3>Laboratorio · tren de engranajes</h3>
+      <div class="widget">
+        <canvas id="cv4" width="760" height="260"></canvas>
+        <div class="controls">
+          <div class="field"><label>r_B (A por vuelta de B) <b id="lab4rb">3.0</b></label><input type="range" id="s4rb" min="1" max="6" step="0.5" value="3"></div>
+          <div class="field"><label>r_C (B por vuelta de C) <b id="lab4rc">4.0</b></label><input type="range" id="s4rc" min="1" max="6" step="0.5" value="4"></div>
+          <button class="btn small" id="btn4pause">⏸ Pausar</button>
+        </div>
+        <div class="readout">
+          <div><span class="k">A por vuelta de C (dy/dx)</span><span class="v good" id="out4chain">—</span></div>
+        </div>
       </div>
-      <button class="btn primary" type="submit" id="botonEnviar">Entrar</button>
-      <div class="linkline">
-        <button type="button" id="olvide">He olvidado la contraseña</button>
+      <div class="quiz" data-quiz="d4"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 5 ===================== -->
+  <section class="station" id="d5" data-est="d5">
+    <div class="station-head">
+      <div class="station-num">05</div>
+      <div class="titles"><h2>Derivadas trigonométricas</h2><span class="tag">▸ El oscilador armónico</span></div>
+      <div class="check" data-check="d5">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Un oscilador masa–resorte cumple x(t) = A·cos(ωt). Al derivar dos veces obtenemos la ecuación del movimiento armónico simple: d²y/dt² + ω²y = 0.</p>
+      <span class="formula-block">d/dx sen x = cos x   ·   d/dx cos x = −sen x</span>
+
+      <h3>Laboratorio · x(t), v(t) y a(t) a la vez</h3>
+      <div class="widget">
+        <canvas id="cv5" width="760" height="320"></canvas>
+        <div class="controls">
+          <div class="field"><label>ω (rad/s) <b id="lab5w">1.6</b></label><input type="range" id="s5w" min="5" max="30" step="1" value="16"></div>
+          <div class="field"><label>Amplitud A (m) <b id="lab5a">1.2</b></label><input type="range" id="s5a" min="4" max="16" step="1" value="12"></div>
+          <button class="btn small" id="btn5pause">⏸ Pausar</button>
+        </div>
+        <div class="readout">
+          <div><span class="k">x(t)</span><span class="v" id="out5x">—</span></div>
+          <div><span class="k">v(t)</span><span class="v" id="out5v">—</span></div>
+          <div><span class="k">a(t) = −ω²x(t)</span><span class="v" id="out5a">—</span></div>
+        </div>
       </div>
-    </form>
+      <div class="quiz" data-quiz="d5"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 6 ===================== -->
+  <section class="station" id="d6" data-est="d6">
+    <div class="station-head">
+      <div class="station-num">06</div>
+      <div class="titles"><h2>El Teorema del Valor Medio</h2><span class="tag">▸ El radar de tramo</span></div>
+      <div class="check" data-check="d6">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Si recorres 150 km en 2 horas, tu velocidad media fue 75 km/h — y en algún instante del trayecto, tu velocímetro marcó exactamente 75. Ese hecho intuitivo es un teorema riguroso.</p>
+      <span class="formula-block">[f(b) − f(a)] / (b − a) = f′(c),  para algún c en (a, b)</span>
+      <div class="callout"><span class="eyebrow">Extra · Diferenciación implícita</span><br>Para la circunferencia x²+y²=25, diferenciando implícitamente: 2x+2y·(dy/dx)=0, así que dy/dx=−x/y. En (3,−4) la pendiente es 3/4 — útil para curvas de nivel e isotermas.</div>
+
+      <h3>Laboratorio · radar de tramo</h3>
+      <div class="widget">
+        <canvas id="cv6" width="760" height="280"></canvas>
+        <div class="readout">
+          <div><span class="k">Velocidad media A→B</span><span class="v" id="out6vavg">—</span></div>
+          <div><span class="k">Instante c (TVM)</span><span class="v" id="out6c">—</span></div>
+          <div><span class="k">v(c) — debe igualar la media</span><span class="v good" id="out6vc">—</span></div>
+        </div>
+      </div>
+      <div class="quiz" data-quiz="d6"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 7 ===================== -->
+  <section class="station" id="d7" data-est="d7">
+    <div class="station-head">
+      <div class="station-num">07</div>
+      <div class="titles"><h2>Orden superior, velocidad y caída libre</h2><span class="tag">▸ Cinemática completa</span></div>
+      <div class="check" data-check="d7">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Cerca de la superficie terrestre, d²y/dt² = −g. Reconstruir y(t) a partir de la aceleración requiere dos primitivas sucesivas, fijando las constantes con las condiciones iniciales.</p>
+      <span class="formula-block">y(t) = −½gt² + v₀t + y₀</span>
+
+      <h3>Laboratorio · objeto lanzado desde un tejado</h3>
+      <div class="widget">
+        <canvas id="cv7" width="760" height="300"></canvas>
+        <div class="controls">
+          <button class="btn small" id="btn7launch">▶ Lanzar</button>
+        </div>
+        <div class="readout">
+          <div><span class="k">t (s)</span><span class="v" id="out7t">0.00</span></div>
+          <div><span class="k">y(t) (m)</span><span class="v" id="out7y">10.00</span></div>
+          <div><span class="k">v(t) (m/s)</span><span class="v" id="out7v">8.00</span></div>
+        </div>
+      </div>
+      <div class="quiz" data-quiz="d7"></div>
+    </div>
+  </section>
+
+  <!-- ===================== EXAMEN ===================== -->
+  <section class="panel" id="examen" style="margin-top:30px">
+    <div class="panel-head">
+      <div class="titles">
+        <span class="eyebrow">Examen de certificación</span>
+        <h2>Reto final del tema</h2>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p class="muted">Ocho preguntas mezclando las siete estaciones. Con 6 aciertos queda certificado, y el resultado se guarda en tu historial. Puedes repetirlo cuando quieras: los fallos van a la cola de repaso.</p>
+      <div class="quiz" id="quizExamen"></div>
+    </div>
+  </section>
+
+  <div class="btn-row" style="margin-top:26px; justify-content:space-between">
+    <a class="btn ghost" href="asignatura.html?code=am1">← Todos los temas</a>
+    <a class="btn ghost" href="repaso.html">Repaso de hoy →</a>
   </div>
 </main>
 
@@ -2433,77 +2748,469 @@ const banco = { cargarBanco, buscarPregunta, hidratarPendientes, metaDeTema, REG
 
 /* ============ LÓGICA DE ESTA PÁGINA ============ */
 
+const { ESTACIONES, EXAMEN, META } = bancoAm1Derivadas;
 
-await ui.arrancar("login");
+await ui.arrancar("");
 
-const esLocal = store.modo() === "local";
-document.getElementById("avisoLocal").hidden = !esLocal;
-document.getElementById("zonaAuth").hidden = esLocal;
+const SUBJECT = META.subject, TOPIC = META.topic;
 
-if (!esLocal && store.usuario()) {
-  window.location.href = "index.html";
+/* ---------- tests de cada estación ---------- */
+ESTACIONES.forEach((est) => {
+  const contenedor = document.querySelector(`[data-quiz="${est.id}"]`);
+  renderQuiz(contenedor, {
+    subject: SUBJECT, topic: TOPIC,
+    preguntas: est.preguntas.map(p => ({ id:p.id, q:p.q, opts:p.opts, correcta:p.correcta, explica:p.explica })),
+    onFin: actualizarEstado,
+  });
+});
+
+/* ---------- examen ---------- */
+renderQuiz(document.getElementById("quizExamen"), {
+  subject: SUBJECT, topic: TOPIC,
+  preguntas: EXAMEN.map(p => ({ id:p.id, q:p.q, opts:p.opts, correcta:p.correcta, explica:p.explica })),
+  examen: true, xpPorPregunta: 8, aprobadoMin: 6/8,
+  onFin: actualizarEstado,
+});
+
+/* ---------- navegación y marcas de completado ---------- */
+const nav = document.getElementById("stationNav");
+ESTACIONES.forEach((est, i) => {
+  const a = ui.el("a", { href: "#" + est.id, id: "nav-" + est.id },
+    `${String(i+1).padStart(2,"0")} · ${est.titulo}`);
+  nav.appendChild(a);
+});
+nav.appendChild(ui.el("a", { href: "#examen" }, "★ Examen"));
+
+function estacionCompleta(est){
+  return est.preguntas.every(p => store.respuestaDe(SUBJECT, TOPIC, p.id)?.correct);
 }
-
-let modoRegistro = false;
-const tabEntrar = document.getElementById("tabEntrar");
-const tabRegistro = document.getElementById("tabRegistro");
-const campoNombre = document.getElementById("campoNombre");
-const boton = document.getElementById("botonEnviar");
-const mensaje = document.getElementById("mensaje");
-const password = document.getElementById("password");
-
-function setModo(registro){
-  modoRegistro = registro;
-  tabEntrar.setAttribute("aria-selected", String(!registro));
-  tabRegistro.setAttribute("aria-selected", String(registro));
-  campoNombre.hidden = !registro;
-  boton.textContent = registro ? "Crear cuenta" : "Entrar";
-  password.setAttribute("autocomplete", registro ? "new-password" : "current-password");
-  mostrar("");
+function actualizarEstado(){
+  ESTACIONES.forEach(est => {
+    const completa = estacionCompleta(est);
+    document.querySelector(`[data-check="${est.id}"]`)?.classList.toggle("done", completa);
+    document.getElementById("nav-" + est.id)?.classList.toggle("done", completa);
+  });
 }
-tabEntrar.addEventListener("click", ()=>setModo(false));
-tabRegistro.addEventListener("click", ()=>setModo(true));
+actualizarEstado();
+store.onCambio(actualizarEstado);
 
-function mostrar(texto, tipo="err"){
-  mensaje.textContent = texto;
-  mensaje.className = "msg " + (texto ? "show " + tipo : "");
-}
+/* ---------- botón "empezar donde lo dejé" ---------- */
+document.getElementById("btnEmpezar").addEventListener("click", () => {
+  const pendiente = ESTACIONES.find(est => !estacionCompleta(est));
+  const destino = pendiente ? document.getElementById(pendiente.id) : document.getElementById("examen");
+  destino.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
-document.getElementById("formulario").addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  const email = document.getElementById("email").value.trim();
-  const pass = password.value;
-  const nombre = document.getElementById("nombre").value.trim() || email.split("@")[0];
-  boton.disabled = true;
-  boton.textContent = "Un momento…";
-  try{
-    if (modoRegistro){
-      await store.registrarse(email, pass, nombre);
-      mostrar("Cuenta creada. Revisa tu correo si te pide confirmación y después entra con tus datos.", "ok");
-      setModo(false);
-    } else {
-      await store.entrar(email, pass);
-      window.location.href = "index.html";
-    }
-  } catch(err){
-    mostrar(err.message);
-  } finally {
-    boton.disabled = false;
-    boton.textContent = modoRegistro ? "Crear cuenta" : "Entrar";
+/* ======================================================================
+   LABORATORIOS INTERACTIVOS
+====================================================================== */
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+/* ---------- cabecera: oscilador armónico ---------- */
+(function(){
+  const cv = document.getElementById("heroCanvas");
+  const ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const t0v = performance.now();
+  const historia = [];
+
+  function frame(now){
+    const t = sinMovimiento ? 0 : (now - t0v)/1000;
+    const omega = 1.6, A = 60;
+    const x = A*Math.cos(omega*t);
+    ctx.fillStyle = cssVar("--scope-bg"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = "rgba(61,220,151,0.09)";
+    for(let gx=0;gx<W;gx+=20){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+    for(let gy=0;gy<H;gy+=20){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+
+    const midy = 60, midx = 90;
+    ctx.strokeStyle = "rgba(147,168,160,0.4)"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(20,midy); ctx.lineTo(W-20,midy); ctx.stroke();
+    const massx = midx + x;
+    ctx.strokeStyle = "#3ddc97"; ctx.lineWidth=1.6; ctx.beginPath();
+    const coils=8, startx=26;
+    ctx.moveTo(startx,midy);
+    for(let i=0;i<=coils;i++){ const xx = startx + (massx-14-startx)*(i/coils); const yy = midy + (i%2===0?-8:8); ctx.lineTo(xx,yy); }
+    ctx.lineTo(massx-14, midy);
+    ctx.stroke();
+    ctx.fillStyle = "#ffb454"; ctx.fillRect(massx-12, midy-12, 24, 24);
+
+    historia.push(x/A);
+    if (historia.length > 240) historia.shift();
+    const tx0 = 20, tw = W - tx0 - 20, ty = H/2 + 55;
+    ctx.strokeStyle = "rgba(147,168,160,0.32)";
+    ctx.beginPath(); ctx.moveTo(tx0,ty); ctx.lineTo(W-20,ty); ctx.stroke();
+    ctx.strokeStyle = "#ffb454"; ctx.lineWidth = 1.8; ctx.beginPath();
+    historia.forEach((s,i)=>{
+      const px = tx0 + (i/240)*tw, py = ty - s*45;
+      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+    });
+    ctx.stroke();
+    ctx.fillStyle = "#7fe0bd"; ctx.font = "11px 'JetBrains Mono', monospace";
+    ctx.fillText("x(t) = A·cos(ωt)", tx0, ty-52);
+
+    if(!sinMovimiento) requestAnimationFrame(frame);
   }
-});
+  requestAnimationFrame(frame);
+})();
 
-document.getElementById("olvide").addEventListener("click", async ()=>{
-  const email = document.getElementById("email").value.trim();
-  if (!email) return mostrar("Escribe primero tu correo y vuelve a pulsar.");
-  try{
-    await store.recuperarContrasena(email);
-    mostrar("Te he enviado un correo para restablecer la contraseña.", "ok");
-  } catch(err){ mostrar(err.message); }
-});
+/* ---------- 1 · cociente de Newton, U(x)=x² ---------- */
+(function(){
+  const cv = document.getElementById("cv1"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sX0 = document.getElementById("s1x0"), sH = document.getElementById("s1h");
+  const U = x => x*x;
+  const xMin=-2.4, xMax=2.4, uMin=-0.3, uMax=5.8;
+  const X = x => pad + (x-xMin)/(xMax-xMin)*(W-2*pad);
+  const Y = u => H-pad - (u-uMin)/(uMax-uMin)*(H-2*pad);
 
-ui.montarPie();
+  function dibujar(){
+    const x0 = (+sX0.value)/10;
+    let h = (+sH.value)/100;
+    lab1x0.textContent = x0.toFixed(1);
+    lab1h.textContent = h.toFixed(2);
+    if (x0+h > xMax-0.05) h = Math.max(0.02, xMax-0.05-x0);
 
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gx=xMin; gx<=xMax; gx++){ ctx.beginPath(); ctx.moveTo(X(gx),pad); ctx.lineTo(X(gx),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(pad,Y(0)); ctx.lineTo(W-pad,Y(0)); ctx.stroke();
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    for(let px=0; px<=W-2*pad; px++){ const x = xMin + px/(W-2*pad)*(xMax-xMin); const yy=Y(U(x));
+      if(px===0) ctx.moveTo(X(x),yy); else ctx.lineTo(X(x),yy); }
+    ctx.stroke();
+
+    const xh = x0+h, m = (U(xh)-U(x0))/h;
+    ctx.strokeStyle = cssVar("--accent-2"); ctx.lineWidth = 2; ctx.setLineDash([5,4]);
+    const xa = x0-0.5, xb = xh+0.5;
+    ctx.beginPath(); ctx.moveTo(X(xa), Y(U(x0)+m*(xa-x0))); ctx.lineTo(X(xb), Y(U(x0)+m*(xb-x0)));
+    ctx.stroke(); ctx.setLineDash([]);
+
+    [[x0,U(x0),"P"],[xh,U(xh),"Q"]].forEach(([x,u,lab])=>{
+      ctx.fillStyle = cssVar("--ink"); ctx.beginPath(); ctx.arc(X(x),Y(u),5,0,Math.PI*2); ctx.fill();
+      ctx.font = "bold 12px 'JetBrains Mono', monospace"; ctx.fillText(lab, X(x)+8, Y(u)-8);
+    });
+
+    out1m.textContent = m.toFixed(3);
+    out1lim.textContent = (2*x0).toFixed(3);
+  }
+  [sX0,sH].forEach(el=>el.addEventListener("input", dibujar));
+  dibujar();
+})();
+
+/* ---------- 2 · diferenciación gráfica, x(t) -> v(t) ---------- */
+(function(){
+  const cv = document.getElementById("cv2"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, padL=48, padR=16, padTop=14;
+  const sT = document.getElementById("s2t");
+  const posX = t => t*t*t/3 - 1.5*t;
+  const velX = t => t*t - 1.5;
+  let trail = [];
+  const tMin=-2.2, tMax=2.2;
+  const X = t => padL + (t-tMin)/(tMax-tMin)*(W-padL-padR);
+
+  function dibujar(){
+    const t = (+sT.value)/100;
+    lab2t.textContent = t.toFixed(2);
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+
+    const rowH = (H-padTop*3)/2;
+    const y1top = padTop, y1bot = padTop+rowH;
+    const xMin=-2.2, xMax=2.2;
+    const Y1 = xx => y1bot - (xx-xMin)/(xMax-xMin)*(y1bot-y1top);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth=1;
+    for(let gx=0; gx<=W; gx+=40){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,Y1(0)); ctx.lineTo(W-padR,Y1(0)); ctx.stroke();
+    ctx.font = "10px 'JetBrains Mono', monospace"; ctx.fillStyle = cssVar("--ink-dim");
+    ctx.fillText("x(t) — posición", padL, y1top-2);
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth=2.2; ctx.beginPath();
+    for(let px=0; px<=W-padL-padR; px++){ const tt=tMin+px/(W-padL-padR)*(tMax-tMin); const yy=Y1(posX(tt));
+      if(px===0) ctx.moveTo(X(tt),yy); else ctx.lineTo(X(tt),yy); }
+    ctx.stroke();
+
+    const slope = velX(t), px0 = posX(t);
+    ctx.strokeStyle = cssVar("--accent-2"); ctx.lineWidth=1.6; ctx.setLineDash([5,4]);
+    const dt=0.55;
+    ctx.beginPath(); ctx.moveTo(X(t-dt), Y1(px0-slope*dt)); ctx.lineTo(X(t+dt), Y1(px0+slope*dt));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = cssVar("--accent-2"); ctx.beginPath(); ctx.arc(X(t),Y1(px0),5,0,Math.PI*2); ctx.fill();
+
+    const y2top = padTop*2+rowH, y2bot = padTop*2+rowH*2;
+    const vMin=-1.6, vMax=3.2;
+    const Y2 = vv => y2bot - (vv-vMin)/(vMax-vMin)*(y2bot-y2top);
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,Y2(0)); ctx.lineTo(W-padR,Y2(0)); ctx.stroke();
+    ctx.fillStyle = cssVar("--ink-dim"); ctx.fillText("v(t) = dx/dt — se traza al mover el marcador", padL, y2top-2);
+
+    const existing = trail.find(p=>Math.abs(p[0]-t)<0.006);
+    if(!existing){ trail.push([t, velX(t)]); trail.sort((a,b)=>a[0]-b[0]); }
+    ctx.strokeStyle = cssVar("--accent-2"); ctx.lineWidth=2.2; ctx.beginPath();
+    trail.forEach((pt,i)=>{ const xx=X(pt[0]), yy=Y2(pt[1]); if(i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy); });
+    ctx.stroke();
+    ctx.fillStyle = cssVar("--accent-2"); ctx.beginPath(); ctx.arc(X(t),Y2(slope),5,0,Math.PI*2); ctx.fill();
+
+    out2v.textContent = slope.toFixed(2);
+  }
+  sT.addEventListener("input", dibujar);
+  document.getElementById("btn2clear").addEventListener("click", ()=>{ trail=[]; dibujar(); });
+  dibujar();
+})();
+
+/* ---------- 3 · regla del producto, P = F·v ---------- */
+(function(){
+  const cv = document.getElementById("cv3"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad=54;
+  const sF = document.getElementById("s3f"), sV = document.getElementById("s3v");
+  const dF=6, dv=4, maxF=100, maxV=80;
+
+  function dibujar(){
+    const F = +sF.value, v = +sV.value;
+    lab3f.textContent = F; lab3v.textContent = v;
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth=1;
+    for(let gx=0; gx<W; gx+=28){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+
+    const sx = (W-pad-20)/maxV, sy=(H-pad-20)/maxF, ox=pad, oy=H-pad;
+    ctx.fillStyle = cssVar("--accent-soft");
+    ctx.fillRect(ox, oy-F*sy, v*sx, F*sy);
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth=2; ctx.strokeRect(ox, oy-F*sy, v*sx, F*sy);
+
+    ctx.fillStyle = cssVar("--accent-2-soft");
+    ctx.fillRect(ox, oy-(F+dF)*sy, v*sx, dF*sy);
+    ctx.fillRect(ox+v*sx, oy-F*sy, dv*sx, F*sy);
+    ctx.strokeStyle = cssVar("--accent-2"); ctx.lineWidth=1.4;
+    ctx.strokeRect(ox, oy-(F+dF)*sy, v*sx, dF*sy);
+    ctx.strokeRect(ox+v*sx, oy-(F+dF)*sy, dv*sx, (F+dF)*sy);
+
+    ctx.font = "11px 'JetBrains Mono', monospace"; ctx.fillStyle = cssVar("--ink-dim");
+    ctx.fillText("v (m/s) →", ox+v*sx/2-20, oy+18);
+    ctx.save(); ctx.translate(ox-34, oy-F*sy/2+10); ctx.rotate(-Math.PI/2); ctx.fillText("F (N) →", 0,0); ctx.restore();
+    ctx.fillStyle = cssVar("--ink"); ctx.font = "bold 12px 'JetBrains Mono', monospace";
+    ctx.fillText("P = F·v = "+Math.round(F*v)+" W", ox+8, oy-F*sy-10);
+
+    out3p.textContent = Math.round(F*v) + " W";
+    out3lin.textContent = Math.round(dF*v + F*dv) + " W";
+  }
+  [sF,sV].forEach(el=>el.addEventListener("input", dibujar));
+  dibujar();
+})();
+
+/* ---------- 4 · regla de la cadena, tren de engranajes ---------- */
+(function(){
+  const cv = document.getElementById("cv4"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const sRb = document.getElementById("s4rb"), sRc = document.getElementById("s4rc");
+  let angle = 0, running = true, last = null, raf = null;
+
+  function dibujar(ts){
+    let rB = +sRb.value, rC = +sRc.value;
+    lab4rb.textContent = rB.toFixed(1); lab4rc.textContent = rC.toFixed(1);
+    out4chain.textContent = (rB*rC).toFixed(1);
+
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth=1;
+    for(let gx=0; gx<W; gx+=28){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,H); ctx.stroke(); }
+
+    if (last===null) last = ts;
+    const dt = ts!==undefined ? Math.min(0.05,(ts-last)/1000) : 0;
+    last = ts;
+    if (running) angle += dt*0.8;
+
+    const cy = H/2, baseR = Math.min(48, W/9);
+    const cx = [W*0.22, W*0.52, W*0.82];
+    const rA = baseR, rBr = baseR/1.6, rCr = baseR/2.3;
+    const wC = angle, wB = wC*rC, wA = wB*rB;
+
+    function gear(x, r, w, color, label, rate){
+      ctx.save(); ctx.translate(x,cy); ctx.rotate(w);
+      ctx.strokeStyle=color; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.stroke();
+      for(let i=0;i<10;i++){ const a=i/10*Math.PI*2;
+        ctx.beginPath(); ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r); ctx.lineTo(Math.cos(a)*(r+7),Math.sin(a)*(r+7)); ctx.stroke(); }
+      ctx.strokeStyle=cssVar("--ink"); ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(r,0); ctx.stroke();
+      ctx.restore();
+      ctx.font = "11px 'JetBrains Mono', monospace"; ctx.fillStyle=cssVar("--ink"); ctx.textAlign="center";
+      ctx.fillText(label, x, cy+r+24);
+      ctx.fillStyle=color; ctx.fillText("×"+rate, x, cy+r+38);
+      ctx.textAlign="left";
+    }
+    gear(cx[2], rCr, wC, cssVar("--accent-2"), "C (motor)", "1");
+    gear(cx[1], rBr, wB, cssVar("--ink"), "B", rC.toFixed(1));
+    gear(cx[0], rA, wA, cssVar("--accent"), "A", (rB*rC).toFixed(1));
+
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.setLineDash([4,4]); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cx[0]+rA, cy); ctx.lineTo(cx[1]-rBr, cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx[1]+rBr, cy); ctx.lineTo(cx[2]-rCr, cy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (running) raf = requestAnimationFrame(dibujar);
+  }
+  raf = requestAnimationFrame(dibujar);
+  [sRb,sRc].forEach(el=>el.addEventListener("input", ()=>{ if(!running) dibujar(last); }));
+  document.getElementById("btn4pause").addEventListener("click", (e)=>{
+    running = !running;
+    e.target.textContent = running ? "⏸ Pausar" : "▶ Reanudar";
+    if (running){ last=null; raf=requestAnimationFrame(dibujar); }
+  });
+})();
+
+/* ---------- 5 · oscilador armónico: x, v, a ---------- */
+(function(){
+  const cv = document.getElementById("cv5"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const sW = document.getElementById("s5w"), sA = document.getElementById("s5a");
+  let elapsed = 0, running = true, lastTs = null, raf = null;
+
+  function dibujar(ts){
+    const omega = (+sW.value)/10, A = (+sA.value)/10;
+    lab5w.textContent = omega.toFixed(1); lab5a.textContent = A.toFixed(1);
+
+    if (running && ts!==undefined) elapsed += Math.min(0.05, (ts-(lastTs||ts))/1000);
+    lastTs = ts;
+    const t = elapsed;
+    const x = A*Math.cos(omega*t), v = -A*omega*Math.sin(omega*t), a = -A*omega*omega*Math.cos(omega*t);
+
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    const topH = 70, midx = W/2, ampPx = Math.min(W*0.32, 130);
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(20,14); ctx.lineTo(W-20,14); ctx.stroke();
+    const massx = midx + (x/1.6)*ampPx;
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth=2; ctx.beginPath();
+    const coils=10, startx=30, starty=topH/2+6;
+    ctx.moveTo(startx,starty);
+    for(let i=0;i<=coils;i++){ const xx = startx + (massx-18-startx)*(i/coils); const yy = starty + (i%2===0?-10:10); ctx.lineTo(xx,yy); }
+    ctx.lineTo(massx-18, starty); ctx.stroke();
+    ctx.fillStyle = cssVar("--accent-2"); ctx.fillRect(massx-16, topH/2-14, 32, 28);
+    ctx.strokeStyle = cssVar("--ink"); ctx.strokeRect(massx-16, topH/2-14, 32, 28);
+
+    const padTop = topH+18, padL=44, padR=16, rowH=(H-padTop-10)/3;
+    const tMin=Math.max(0,t-6), tMax=tMin+6;
+    const X = tt => padL + (tt-tMin)/(tMax-tMin)*(W-padL-padR);
+    function panel(idx, label, fn, range, color){
+      const top = padTop+idx*rowH, bot = top+rowH-6, mid=(top+bot)/2;
+      ctx.strokeStyle = cssVar("--grid"); ctx.beginPath(); ctx.moveTo(padL,mid); ctx.lineTo(W-padR,mid); ctx.stroke();
+      ctx.font="10px 'JetBrains Mono', monospace"; ctx.fillStyle=cssVar("--ink-dim"); ctx.fillText(label,padL,top-2);
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath(); let started=false;
+      for(let px=0; px<=W-padL-padR; px++){ const tt=tMin+px/(W-padL-padR)*(tMax-tMin); if(tt>t) break;
+        const val=fn(tt); const yy=mid-(val/range)*(rowH/2-8);
+        if(!started){ ctx.moveTo(X(tt),yy); started=true; } else ctx.lineTo(X(tt),yy); }
+      ctx.stroke();
+      const curY = mid-(fn(t)/range)*(rowH/2-8);
+      ctx.fillStyle=color; ctx.beginPath(); ctx.arc(X(t),curY,4,0,Math.PI*2); ctx.fill();
+    }
+    panel(0,"x(t) = A·cos(ωt)", tt=>A*Math.cos(omega*tt), Math.max(1.6,A), cssVar("--accent"));
+    panel(1,"v(t) = −Aω·sen(ωt)", tt=>-A*omega*Math.sin(omega*tt), Math.max(1.6,A*omega), cssVar("--accent-2"));
+    panel(2,"a(t) = −ω²x(t)", tt=>-A*omega*omega*Math.cos(omega*tt), Math.max(1.6,A*omega*omega), "#c98bd9");
+
+    out5x.textContent = x.toFixed(2); out5v.textContent = v.toFixed(2); out5a.textContent = a.toFixed(2);
+    if (running) raf = requestAnimationFrame(dibujar);
+  }
+  raf = requestAnimationFrame(dibujar);
+  document.getElementById("btn5pause").addEventListener("click", (e)=>{
+    running = !running;
+    e.target.textContent = running ? "⏸ Pausar" : "▶ Reanudar";
+    if (running){ lastTs=null; raf=requestAnimationFrame(dibujar); }
+  });
+})();
+
+/* ---------- 6 · TVM, radar de tramo ---------- */
+(function(){
+  const cv = document.getElementById("cv6"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad=44;
+  const a=0.2, b=2.6;
+  const s = t => t*t*t/3 - 1.6*t + 2.2;
+  const sp = t => t*t - 1.6;
+  const tMin=0, tMax=3, sMin=0.5, sMax=3.6;
+  const X = t => pad + (t-tMin)/(tMax-tMin)*(W-2*pad);
+  const Y = ss => H-pad - (ss-sMin)/(sMax-sMin)*(H-2*pad);
+
+  function findC(){
+    const vavg = (s(b)-s(a))/(b-a);
+    const val = vavg+1.6;
+    return val<0 ? (a+b)/2 : Math.sqrt(val);
+  }
+
+  ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth=1;
+  for(let gt=0; gt<=tMax; gt++){ ctx.beginPath(); ctx.moveTo(X(gt),pad); ctx.lineTo(X(gt),H-pad); ctx.stroke(); }
+  ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth=2.2; ctx.beginPath();
+  for(let px=0; px<=W-2*pad; px++){ const t=tMin+px/(W-2*pad)*(tMax-tMin); const yy=Y(s(t));
+    if(px===0) ctx.moveTo(X(t),yy); else ctx.lineTo(X(t),yy); }
+  ctx.stroke();
+
+  const vavg = (s(b)-s(a))/(b-a);
+  ctx.strokeStyle = cssVar("--accent-2"); ctx.lineWidth=1.8; ctx.setLineDash([6,5]);
+  ctx.beginPath(); ctx.moveTo(X(a),Y(s(a))); ctx.lineTo(X(b),Y(s(b))); ctx.stroke();
+
+  const c = findC(), sc = s(c);
+  ctx.strokeStyle = "#c98bd9"; ctx.lineWidth=2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(X(c-0.5), Y(sc-vavg*0.5)); ctx.lineTo(X(c+0.5), Y(sc+vavg*0.5)); ctx.stroke();
+
+  [[a,s(a),cssVar("--ink"),"A"],[b,s(b),cssVar("--ink"),"B"],[c,sc,"#c98bd9","C"]].forEach(([t,ss,col,lab])=>{
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(X(t),Y(ss),5,0,Math.PI*2); ctx.fill();
+    ctx.font="bold 11px 'JetBrains Mono', monospace"; ctx.fillText(lab,X(t)+8,Y(ss)-8);
+  });
+
+  out6vavg.textContent = vavg.toFixed(3);
+  out6c.textContent = c.toFixed(3);
+  out6vc.textContent = sp(c).toFixed(3);
+})();
+
+/* ---------- 7 · caída libre ---------- */
+(function(){
+  const cv = document.getElementById("cv7"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const y = t => -4.9*t*t + 8*t + 10;
+  const v = t => -9.8*t + 8;
+  const tImpact = (-8 - Math.sqrt(64+196))/(-9.8);
+  let running = false, elapsed = 0, lastTs = null, raf = null;
+
+  function dibujar(ts){
+    if (running && ts!==undefined){ const dt=Math.min(0.05,(ts-(lastTs||ts))/1000); elapsed=Math.min(tImpact, elapsed+dt); }
+    lastTs = ts;
+    const t = elapsed;
+
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    const leftW = Math.min(110, W*0.2), groundY=H-20, topY=20;
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.beginPath(); ctx.moveTo(0,groundY); ctx.lineTo(leftW+10,groundY); ctx.stroke();
+    ctx.fillStyle = cssVar("--grid"); ctx.fillRect(6, groundY-((10/13.27)*(groundY-topY)), leftW*0.5, (10/13.27)*(groundY-topY));
+    const yFrac = Math.max(0,Math.min(1, y(t)/13.27));
+    const ballY = groundY - yFrac*(groundY-topY);
+    ctx.fillStyle = cssVar("--accent-2"); ctx.beginPath(); ctx.arc(leftW*0.5+6, ballY, 7,0,Math.PI*2); ctx.fill();
+
+    const padL = leftW+44, padR=16, padTop=14, rowH=(H-padTop*3)/2;
+    const X = tt => padL + tt/tImpact*(W-padL-padR);
+    function panel(idx,label,fn,minV,maxV,color){
+      const top=padTop+idx*(rowH+padTop), bot=top+rowH;
+      const Y = val => bot - (val-minV)/(maxV-minV)*(bot-top);
+      ctx.strokeStyle = cssVar("--grid"); ctx.beginPath(); ctx.moveTo(padL,Y(0)); ctx.lineTo(W-padR,Y(0)); ctx.stroke();
+      ctx.font="10px 'JetBrains Mono', monospace"; ctx.fillStyle=cssVar("--ink-dim"); ctx.fillText(label,padL,top-2);
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath(); let started=false;
+      for(let px=0; px<=W-padL-padR; px++){ const tt=px/(W-padL-padR)*tImpact; if(tt>t) break; const yy=Y(fn(tt));
+        if(!started){ ctx.moveTo(X(tt),yy); started=true; } else ctx.lineTo(X(tt),yy); }
+      ctx.stroke();
+      ctx.fillStyle=color; ctx.beginPath(); ctx.arc(X(t),Y(fn(t)),4,0,Math.PI*2); ctx.fill();
+    }
+    panel(0,"y(t) = −4,9t²+8t+10 (m)", y, 0, 14, cssVar("--accent"));
+    panel(1,"v(t) = y′(t) = −9,8t+8 (m/s)", v, -18, 9, cssVar("--accent-2"));
+
+    out7t.textContent = t.toFixed(2);
+    out7y.textContent = y(t).toFixed(2);
+    out7v.textContent = v(t).toFixed(2);
+    if (running) raf = requestAnimationFrame(dibujar);
+  }
+  dibujar();
+  document.getElementById("btn7launch").addEventListener("click", (e)=>{
+    if (elapsed >= tImpact-0.01) elapsed = 0;
+    running = !running;
+    e.target.textContent = running ? "⏸ Pausar" : "▶ Lanzar";
+    if (running){ lastTs=null; raf=requestAnimationFrame(dibujar); }
+  });
+})();
 </script>
 </body>
 </html>

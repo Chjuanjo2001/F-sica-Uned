@@ -3,10 +3,11 @@
    Estrategia: "stale-while-revalidate" para todo lo propio de la app.
    ========================================================================== */
 
-const VERSION = "fisica-uned-v1";
+const VERSION = "fisica-uned-v2";
 const ESENCIALES = [
   "./", "./index.html", "./asignatura.html", "./repaso.html", "./perfil.html",
   "./login.html", "./admin.html", "./tema-am1-01-preliminares.html",
+  "./tema-am1-02-limites.html", "./tema-am1-03-derivadas.html",
   "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png",
 ];
 

@@ -21,6 +21,8 @@ a medias), da igual: los archivos nuevos los sustituyen y lo que sobra no molest
 | `index.html` | Portal: mapa del grado y tu sesión de hoy |
 | `asignatura.html` | Lista de temas de Cálculo I |
 | `tema-am1-01-preliminares.html` | Tema 1 completo, con sus laboratorios |
+| `tema-am1-02-limites.html` | Tema 2 completo, con sus laboratorios |
+| `tema-am1-03-derivadas.html` | Tema 3 completo, con sus laboratorios |
 | `repaso.html` | Sesión de repaso espaciado |
 | `perfil.html` | Progreso, actividad y exámenes |
 | `admin.html` | Panel de administración |

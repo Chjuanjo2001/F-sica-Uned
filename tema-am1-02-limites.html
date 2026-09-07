@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Entrar · Física UNED</title>
+<title>Límites y continuidad · Cálculo I</title>
 <meta name="theme-color" content="#0a1210">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -304,23 +304,148 @@ footer.appfoot a{ color:var(--ink-dim); }
 
 </style>
 <style>
-  .auth-wrap{ max-width:440px; margin:0 auto; padding:52px 20px 80px; }
-  .auth-wrap h1{ font-size:2.2rem; line-height:1; }
-  .auth-wrap h1 em{ font-style:normal; color:var(--accent); }
-  .tabs{ display:flex; gap:6px; margin:24px 0 18px; background:var(--bg-sunken); padding:5px; border-radius:10px; border:1px solid var(--line); }
-  .tabs button{
-    flex:1; border:0; background:transparent; color:var(--ink-dim); border-radius:7px; padding:9px;
-    font-family:'JetBrains Mono',monospace; font-size:0.74rem; text-transform:uppercase;
-    letter-spacing:0.06em; cursor:pointer; font-weight:700;
-  }
-  .tabs button[aria-selected="true"]{ background:var(--bg-elev); color:var(--accent); box-shadow:var(--shadow); }
-  form{ display:flex; flex-direction:column; gap:14px; }
-  .msg{ font-size:0.85rem; padding:11px 13px; border-radius:8px; display:none; }
-  .msg.show{ display:block; }
-  .msg.ok{ background:var(--accent-soft); border:1px solid var(--accent); }
-  .msg.err{ background:var(--bad-soft); border:1px solid var(--bad); color:var(--ink); }
-  .linkline{ text-align:center; font-size:0.82rem; margin-top:6px; }
-  .linkline button{ background:none; border:0; color:var(--accent); cursor:pointer; font-family:inherit; font-size:inherit; text-decoration:underline; padding:0; }
+/* ==========================================================================
+   Estilos de las estaciones de estudio, laboratorios interactivos y tests
+   ========================================================================== */
+
+/* ===== Preguntas ===== */
+.quiz{ margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+.quiz-item{ margin-bottom:18px; }
+.quiz-item .q{
+  font-family:'JetBrains Mono',monospace; font-size:0.88rem; margin-bottom:10px;
+  display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;
+}
+.quiz-item .q .idx{ color:var(--accent); flex:none; }
+.opts{ display:grid; gap:8px; }
+.opt{
+  text-align:left; border:1px solid var(--line); background:var(--bg-elev); color:var(--ink);
+  border-radius:9px; padding:12px 14px; cursor:pointer; font-size:0.9rem;
+  font-family:'Literata',serif; line-height:1.45; min-height:46px;
+  transition:border-color .15s ease, background .15s ease;
+}
+.opt:hover:not(:disabled){ border-color:var(--accent); }
+.opt.correct{ border-color:var(--good); background:var(--accent-soft); }
+.opt.wrong{ border-color:var(--bad); background:var(--bad-soft); }
+.opt:disabled{ cursor:default; }
+.explain{
+  font-size:0.85rem; color:var(--ink-dim); margin-top:9px; padding:10px 12px;
+  background:var(--bg-sunken); border-radius:8px; border-left:3px solid var(--accent); display:none;
+}
+.explain.show{ display:block; }
+.review-note{
+  margin-top:7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+  color:var(--accent); letter-spacing:0.02em;
+}
+.xp-pop{
+  font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--good);
+  font-weight:700; margin-left:8px;
+}
+
+/* ===== Resultado de examen ===== */
+.exam-result{
+  margin-top:20px; padding:26px 20px; border-radius:12px; text-align:center;
+  border:1px solid var(--accent); background:var(--accent-soft);
+}
+.exam-result.again{ border-color:var(--accent-2); background:var(--accent-2-soft); }
+.exam-ring{
+  width:74px; height:74px; border-radius:50%; margin:0 auto 12px; display:flex;
+  align-items:center; justify-content:center; font-size:2rem; background:var(--bg-elev);
+  border:2px solid var(--accent);
+}
+.exam-result.again .exam-ring{ border-color:var(--accent-2); }
+.exam-result h3{ font-size:1.4rem; }
+.exam-result p{ margin:8px auto 0; max-width:52ch; color:var(--ink-dim); font-size:0.92rem; }
+
+/* ===== Estaciones del tema ===== */
+.station{
+  background:var(--bg-elev); border:1px solid var(--line); border-radius:14px;
+  margin-top:22px; overflow:hidden; box-shadow:var(--shadow); scroll-margin-top:90px;
+}
+.station-head{
+  display:flex; align-items:center; gap:14px; padding:16px 20px;
+  border-bottom:1px solid var(--line); background:var(--bg-sunken);
+}
+.station-num{
+  font-family:'Big Shoulders Display',sans-serif; font-weight:800; font-size:1.6rem;
+  color:var(--accent); min-width:2ch;
+}
+.station-head .titles{ flex:1; min-width:0; }
+.station-head h2{ font-size:1.4rem; }
+.station-head .tag{
+  font-family:'JetBrains Mono',monospace; font-size:0.64rem; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--accent-2); margin-top:3px; display:block;
+}
+.check{
+  width:30px; height:30px; border-radius:50%; border:2px solid var(--line); flex:none;
+  display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:transparent;
+  transition:all .2s ease;
+}
+.check.done{ border-color:var(--good); background:var(--accent-soft); color:var(--good); }
+.station-body{ padding:20px; }
+.station-body h3{ font-size:1rem; margin:22px 0 10px; }
+.formula-block{
+  display:block; text-align:center; font-size:1.05rem; padding:12px;
+  margin:12px 0; background:var(--bg-sunken); border:1px solid var(--line); border-radius:8px;
+  font-family:'JetBrains Mono',monospace; overflow-x:auto;
+}
+
+/* ===== Laboratorios interactivos ===== */
+.widget{
+  background:var(--bg-sunken); border:1px solid var(--line); border-radius:10px;
+  padding:14px; margin:14px 0 6px;
+}
+.widget canvas{
+  display:block; width:100%; touch-action:none; background:var(--bg-elev);
+  border-radius:8px; border:1px solid var(--line);
+}
+.controls{ display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; }
+.controls .field{ min-width:150px; flex:1; }
+.readout{
+  display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:12px;
+  padding-top:12px; border-top:1px dashed var(--line);
+}
+.readout div{ font-family:'JetBrains Mono',monospace; font-size:0.82rem; }
+.readout .k{ color:var(--ink-dim); display:block; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.06em; }
+.readout .v{ font-weight:700; font-variant-numeric:tabular-nums; }
+.readout .v.good{ color:var(--good); }
+.readout .v.bad{ color:var(--bad); }
+
+/* ===== Navegación entre estaciones ===== */
+.stationnav{ display:flex; gap:8px; overflow-x:auto; padding:16px 0 6px; -webkit-overflow-scrolling:touch; }
+.stationnav a{
+  flex:none; text-decoration:none; color:var(--ink-dim); font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem; letter-spacing:0.05em; text-transform:uppercase; border:1px solid var(--line);
+  border-radius:20px; padding:7px 13px; white-space:nowrap; background:var(--bg-elev);
+}
+.stationnav a.done{ color:var(--accent); border-color:var(--accent); }
+
+/* ===== Osciloscopio de cabecera ===== */
+.scope{
+  background:var(--scope-bg); border-radius:12px; border:1px solid var(--line);
+  box-shadow:var(--shadow); padding:10px;
+}
+.scope canvas{ display:block; width:100%; border-radius:6px; }
+.scope .caption{
+  font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#7fe0bd;
+  letter-spacing:0.08em; padding:6px 4px 2px; text-transform:uppercase;
+}
+
+/* ===== Cabecera del tema ===== */
+.tema-hero{ padding:34px 0 8px; }
+.tema-hero h1{ font-size:clamp(2rem,6vw,3.2rem); line-height:1; }
+.tema-hero h1 em{ font-style:normal; color:var(--accent); }
+.tema-hero .lead{ color:var(--ink-dim); font-size:1.05rem; max-width:56ch; margin-top:14px; }
+.hero-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:26px; align-items:center; margin-top:20px; }
+@media (max-width:760px){ .hero-grid{ grid-template-columns:1fr; } }
+.quote{
+  font-style:italic; color:var(--ink-dim); border-left:3px solid var(--accent-2);
+  padding:4px 0 4px 16px; margin:22px 0 0; font-size:0.93rem; max-width:58ch;
+}
+.quote cite{
+  display:block; font-style:normal; font-family:'JetBrains Mono',monospace;
+  font-size:0.7rem; margin-top:4px;
+}
+
 </style>
 <!-- Diagnóstico de arranque: avisa en pantalla si faltan archivos en el servidor -->
 <script>
@@ -359,47 +484,247 @@ footer.appfoot a{ color:var(--ink-dim); }
 </head>
 <body>
 
-<main class="auth-wrap">
-  <span class="eyebrow">Física UNED</span>
-  <h1>Entra a tu <em>laboratorio</em></h1>
+<main class="wrap narrow">
 
-  <div id="avisoLocal" hidden>
-    <div class="notice" style="margin-top:20px">
-      <b>Ahora mismo la web funciona en modo local.</b><br>
-      Tu progreso se guarda en este dispositivo y no hace falta cuenta para estudiar.
-      Cuando quieras sincronizar iPad y Mac, o abrir la web a más gente, configura Supabase siguiendo el README y esta pantalla se activará sola.
+  <section class="tema-hero">
+    <span class="eyebrow">Cálculo I · Tema 02 · Capítulo 1</span>
+    <h1>Límites:<br>el <em>instante</em><br>capturado.</h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lead">Newton necesitaba la velocidad exacta de una piedra que cae, no solo su velocidad media. El límite es la herramienta que atrapa ese instante: acercarse todo lo que se quiera sin necesidad de "llegar" del todo. Siete estaciones, con aplicación directa en cinemática, fricción, campos y continuidad.</p>
+        <div class="quote">«Todo cuerpo continúa en su estado de reposo o de movimiento rectilíneo y uniforme, a no ser que se lo obligue a salir de ese estado mediante la aplicación de fuerzas sobre él.»
+          <cite>Isaac Newton · Principia Mathematica, 1687</cite>
+        </div>
+        <div class="btn-row" style="margin-top:22px">
+          <button class="btn primary" id="btnEmpezar">Empezar donde lo dejé</button>
+          <a class="btn ghost" href="#examen">Ir al examen</a>
+        </div>
+      </div>
+      <div class="scope">
+        <canvas id="heroCanvas" width="360" height="250"></canvas>
+        <div class="caption">osc·02 — secante → tangente</div>
+      </div>
     </div>
-    <div class="btn-row" style="margin-top:20px">
-      <a class="btn primary" href="index.html">Ir a estudiar</a>
+    <nav class="stationnav" id="stationNav"></nav>
+  </section>
+
+  <!-- ===================== ESTACIÓN 1 ===================== -->
+  <section class="station" id="l1" data-est="l1">
+    <div class="station-head">
+      <div class="station-num">01</div>
+      <div class="titles"><h2>Velocidad media y velocidad instantánea</h2><span class="tag">▸ La piedra que cae</span></div>
+      <div class="check" data-check="l1">✓</div>
     </div>
-  </div>
+    <div class="station-body">
+      <p>Una piedra soltada desde el reposo recorre <span class="formula">y = 4,9t²</span> m en t segundos. Su velocidad media en <span class="formula">[t, t+h]</span> es <span class="formula">Δy/Δt</span>. Para hallar la velocidad en un instante exacto no podemos hacer h = 0 directamente — dividir por cero no tiene sentido — pero sí podemos ver a qué valor se <b>acerca</b> ese cociente cuando h se acerca a 0.</p>
+      <span class="formula-block">v(t) = lím<sub>h→0</sub> [4,9(t+h)² − 4,9t²] / h = 9,8t</span>
+      <div class="callout"><span class="eyebrow">En el laboratorio</span><br>Arrastra Q hacia P sobre la curva y = 4,9t². La pendiente de la secante PQ es la velocidad media; observa cómo se acerca a la velocidad instantánea 9,8t₀ cuando h → 0.</div>
 
-  <div id="zonaAuth" hidden>
-    <div class="tabs" role="tablist">
-      <button role="tab" id="tabEntrar" aria-selected="true">Entrar</button>
-      <button role="tab" id="tabRegistro" aria-selected="false">Crear cuenta</button>
+      <h3>Laboratorio · secante que se convierte en tangente</h3>
+      <div class="widget">
+        <canvas id="cv1" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>Instante t₀ (s) <b id="lab1t0">1.0</b></label><input type="range" id="s1t0" min="0.3" max="2.5" step="0.1" value="1"></div>
+          <div class="field"><label>Separación h (s) <b id="lab1h">1.20</b></label><input type="range" id="s1h" min="0" max="120" step="1" value="100"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">Cociente de Newton (v. media)</span><span class="v" id="out1m">—</span></div>
+          <div><span class="k">Velocidad instantánea 9,8t₀</span><span class="v good" id="out1lim">—</span></div>
+        </div>
+      </div>
+      <div class="quiz" data-quiz="l1"></div>
     </div>
+  </section>
 
-    <div class="msg" id="mensaje"></div>
+  <!-- ===================== ESTACIÓN 2 ===================== -->
+  <section class="station" id="l2" data-est="l2">
+    <div class="station-head">
+      <div class="station-num">02</div>
+      <div class="titles"><h2>Cálculo algebraico de límites</h2><span class="tag">▸ Agujeros que sí tienen valor</span></div>
+      <div class="check" data-check="l2">✓</div>
+    </div>
+    <div class="station-body">
+      <p>La función <span class="formula">f(x) = (x²−1)/(x−1)</span> no está definida en x = 1 (dividir por 0), pero factorizando: <span class="formula">f(x) = (x−1)(x+1)/(x−1) = x+1</span> para x ≠ 1. La gráfica es la recta y = x+1 con un único punto agujereado en (1, 2). El límite existe aunque f(1) no.</p>
+      <span class="formula-block">lím<sub>x→1</sub> (x²−1)/(x−1) = 2</span>
+      <div class="callout"><span class="eyebrow">Puente a Física I</span><br>La tasa media de crecimiento de un cultivo biológico entre dos días es la pendiente de una recta secante sobre la curva de biomasa. Cuando el intervalo se estrecha, esa secante converge a la tangente: la tasa de crecimiento en un día exacto.</div>
 
-    <form id="formulario">
-      <div class="field" id="campoNombre" hidden>
-        <label for="nombre">Cómo quieres que te llame</label>
-        <input type="text" id="nombre" autocomplete="name" placeholder="Juan José">
+      <h3>Laboratorio · el agujero que sí tiene valor</h3>
+      <div class="widget">
+        <canvas id="cv2" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>x (se acerca a 1) <b id="lab2x">1.500</b></label><input type="range" id="s2x" min="0" max="200" step="1" value="150"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">f(x) = (x²−1)/(x−1)</span><span class="v" id="out2f">—</span></div>
+          <div><span class="k">Distancia |x − 1|</span><span class="v" id="out2d">—</span></div>
+          <div><span class="k">Límite exacto</span><span class="v good">2</span></div>
+        </div>
       </div>
-      <div class="field">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" autocomplete="email" required placeholder="tu@correo.com">
+      <div class="quiz" data-quiz="l2"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 3 ===================== -->
+  <section class="station" id="l3" data-est="l3">
+    <div class="station-head">
+      <div class="station-num">03</div>
+      <div class="titles"><h2>Límites laterales</h2><span class="tag">▸ Fricción cinética y sgn(v)</span></div>
+      <div class="check" data-check="l3">✓</div>
+    </div>
+    <div class="station-body">
+      <p>La fuerza de rozamiento cinético siempre se opone al movimiento: <span class="formula">F = −μN·sgn(v)</span>. La función signo <span class="formula">sgn(v) = v/|v|</span> vale −1 si v &lt; 0 y +1 si v &gt; 0. En v = 0 los límites laterales no coinciden, así que <b>no existe</b> el límite bilateral — y la fricción cinética queda indefinida en reposo exacto.</p>
+      <span class="formula-block">lím<sub>v→0⁻</sub> sgn(v) = −1  ≠  lím<sub>v→0⁺</sub> sgn(v) = 1</span>
+
+      <h3>Laboratorio · rozamiento y el salto en v = 0</h3>
+      <div class="widget">
+        <canvas id="cv3" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>Velocidad v (m/s) <b id="lab3v">2.0</b></label><input type="range" id="s3v" min="-50" max="50" step="1" value="20"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">sgn(v)</span><span class="v" id="out3sgn">—</span></div>
+          <div><span class="k">F. cinética (μN=1)</span><span class="v" id="out3f">—</span></div>
+          <div><span class="k">¿Límite bilateral en v=0?</span><span class="v bad">No existe</span></div>
+        </div>
       </div>
-      <div class="field">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" autocomplete="current-password" required minlength="6" placeholder="mínimo 6 caracteres">
+      <div class="quiz" data-quiz="l3"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 4 ===================== -->
+  <section class="station" id="l4" data-est="l4">
+    <div class="station-head">
+      <div class="station-num">04</div>
+      <div class="titles"><h2>Límites en el infinito</h2><span class="tag">▸ Velocidad terminal</span></div>
+      <div class="check" data-check="l4">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Un paracaidista en caída con rozamiento del aire no acelera para siempre: su velocidad se aproxima a un valor límite, la <b>velocidad terminal</b>, cuando t → ∞. La función del libro <span class="formula">f(x) = x/√(x²+1)</span> ilustra el mismo comportamiento: se acerca a rectas horizontales — <b>asíntotas</b> — sin necesidad de alcanzarlas.</p>
+      <span class="formula-block">lím<sub>x→∞</sub> x/√(x²+1) = 1   ·   lím<sub>x→−∞</sub> x/√(x²+1) = −1</span>
+
+      <h3>Laboratorio · acercarse al infinito</h3>
+      <div class="widget">
+        <canvas id="cv4" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>x (marcador móvil) <b id="lab4x">3.0</b></label><input type="range" id="s4x" min="-400" max="400" step="1" value="30"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">f(x) = x/√(x²+1)</span><span class="v" id="out4f">—</span></div>
+          <div><span class="k">Asíntota que se aproxima</span><span class="v" id="out4asym">—</span></div>
+        </div>
       </div>
-      <button class="btn primary" type="submit" id="botonEnviar">Entrar</button>
-      <div class="linkline">
-        <button type="button" id="olvide">He olvidado la contraseña</button>
+      <div class="quiz" data-quiz="l4"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 5 ===================== -->
+  <section class="station" id="l5" data-est="l5">
+    <div class="station-head">
+      <div class="station-num">05</div>
+      <div class="titles"><h2>Límites infinitos</h2><span class="tag">▸ El campo de Coulomb en r → 0</span></div>
+      <div class="check" data-check="l5">✓</div>
+    </div>
+    <div class="station-body">
+      <p>El campo eléctrico de una carga puntual es <span class="formula">E(r) = kq/r²</span>. A medida que r se acerca a 0, E crece sin límite: es un <b>límite infinito</b>, y r = 0 es una <b>asíntota vertical</b>. No es un número real — es una forma de describir un comportamiento que se dispara.</p>
+      <span class="formula-block">lím<sub>r→0</sub> k/r² = ∞</span>
+      <div class="callout"><span class="eyebrow">Cuidado con el signo</span><br>Con f(x) = 1/x el comportamiento depende del lado: por la derecha tiende a +∞, por la izquierda a −∞ (Ejemplo 7, Sección 1.3). El signo del límite infinito no siempre es el mismo por ambos lados.</div>
+
+      <h3>Laboratorio · E(r) = k/r² cerca del origen</h3>
+      <div class="widget">
+        <canvas id="cv5" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field"><label>Distancia r (m) <b id="lab5r">1.00</b></label><input type="range" id="s5r" min="5" max="300" step="1" value="100"></div>
+        </div>
+        <div class="readout">
+          <div><span class="k">E(r) = 1/r²</span><span class="v" id="out5e">—</span></div>
+          <div><span class="k">Comportamiento cuando r→0</span><span class="v bad">Crece sin cota (∞)</span></div>
+        </div>
       </div>
-    </form>
+      <div class="quiz" data-quiz="l5"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 6 ===================== -->
+  <section class="station" id="l6" data-est="l6">
+    <div class="station-head">
+      <div class="station-num">06</div>
+      <div class="titles"><h2>Continuidad</h2><span class="tag">▸ Interruptores y difracción</span></div>
+      <div class="check" data-check="l6">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Una función es continua en c si <span class="formula">lím<sub>x→c</sub> f(x) = f(c)</span>. Un interruptor que se enciende en t = 0 se modela con la <b>función de Heaviside</b>: continua por la derecha, pero no por la izquierda. Y una intensidad de difracción como <span class="formula">sen(x)/x</span> no está definida en x = 0, pero como su límite ahí vale 1, tiene una <b>discontinuidad evitable</b>: basta con rellenar ese punto.</p>
+
+      <h3>Laboratorio · dos formas de romperse (o no)</h3>
+      <div class="widget">
+        <canvas id="cv6" width="760" height="280"></canvas>
+        <div class="controls">
+          <div class="field">
+            <label for="s6fn">Función</label>
+            <select id="s6fn">
+              <option value="heaviside">Interruptor H(x) (Heaviside)</option>
+              <option value="sinc">Difracción sen(x)/x</option>
+            </select>
+          </div>
+          <div class="field" id="ctrl6extend" hidden>
+            <label style="justify-content:flex-start; gap:8px;"><input type="checkbox" id="s6extend" style="width:auto"> Rellenar el agujero (extensión continua)</label>
+          </div>
+        </div>
+        <div class="readout">
+          <div><span class="k">Tipo de discontinuidad</span><span class="v" id="out6tipo">—</span></div>
+          <div><span class="k">¿Continua ahora?</span><span class="v" id="out6cont">—</span></div>
+        </div>
+      </div>
+      <div class="quiz" data-quiz="l6"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ESTACIÓN 7 ===================== -->
+  <section class="station" id="l7" data-est="l7">
+    <div class="station-head">
+      <div class="station-num">07</div>
+      <div class="titles"><h2>Max-Min, Valor Medio y bisección</h2><span class="tag">▸ Cazar una raíz a mordiscos</span></div>
+      <div class="check" data-check="l7">✓</div>
+    </div>
+    <div class="station-body">
+      <p>Toda función continua en un intervalo cerrado alcanza un máximo y un mínimo (Teorema Max-Min), y toma todos los valores intermedios entre dos de sus valores (Teorema del Valor Medio). Combinados, garantizan que si f cambia de signo en los extremos de un intervalo, hay una raíz dentro — y el <b>método de la bisección</b> la encuentra partiendo el intervalo por la mitad una y otra vez.</p>
+      <span class="formula-block">f(x) = x³ − x − 1,  f(1) = −1,  f(2) = 5  ⟹  hay una raíz en [1, 2]</span>
+
+      <h3>Laboratorio · bisección paso a paso</h3>
+      <div class="widget">
+        <canvas id="cv7" width="760" height="280"></canvas>
+        <div class="controls">
+          <button class="btn small" id="btn7step">➗ Bisecar</button>
+          <button class="btn small" id="btn7reset">↺ Reiniciar</button>
+        </div>
+        <div class="readout">
+          <div><span class="k">Iteración</span><span class="v" id="out7iter">0</span></div>
+          <div><span class="k">Intervalo actual</span><span class="v" id="out7int">[1, 2]</span></div>
+          <div><span class="k">Punto medio</span><span class="v" id="out7mid">—</span></div>
+          <div><span class="k">f(punto medio)</span><span class="v" id="out7fmid">—</span></div>
+        </div>
+      </div>
+      <div class="callout"><span class="eyebrow">Dato para el examen</span><br>La raíz exacta de x³−x−1=0 es 1,3247... El método de bisección converge lentamente pero con total seguridad: cada paso divide el error a la mitad.</div>
+      <div class="quiz" data-quiz="l7"></div>
+    </div>
+  </section>
+
+  <!-- ===================== EXAMEN ===================== -->
+  <section class="panel" id="examen" style="margin-top:30px">
+    <div class="panel-head">
+      <div class="titles">
+        <span class="eyebrow">Examen de certificación</span>
+        <h2>Reto final del tema</h2>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p class="muted">Ocho preguntas mezclando las siete estaciones. Con 6 aciertos queda certificado, y el resultado se guarda en tu historial. Puedes repetirlo cuando quieras: los fallos van a la cola de repaso.</p>
+      <div class="quiz" id="quizExamen"></div>
+    </div>
+  </section>
+
+  <div class="btn-row" style="margin-top:26px; justify-content:space-between">
+    <a class="btn ghost" href="asignatura.html?code=am1">← Todos los temas</a>
+    <a class="btn ghost" href="repaso.html">Repaso de hoy →</a>
   </div>
 </main>
 
@@ -2433,77 +2758,448 @@ const banco = { cargarBanco, buscarPregunta, hidratarPendientes, metaDeTema, REG
 
 /* ============ LÓGICA DE ESTA PÁGINA ============ */
 
+const { ESTACIONES, EXAMEN, META } = bancoAm1Limites;
 
-await ui.arrancar("login");
+await ui.arrancar("");
 
-const esLocal = store.modo() === "local";
-document.getElementById("avisoLocal").hidden = !esLocal;
-document.getElementById("zonaAuth").hidden = esLocal;
+const SUBJECT = META.subject, TOPIC = META.topic;
 
-if (!esLocal && store.usuario()) {
-  window.location.href = "index.html";
+/* ---------- tests de cada estación ---------- */
+ESTACIONES.forEach((est) => {
+  const contenedor = document.querySelector(`[data-quiz="${est.id}"]`);
+  renderQuiz(contenedor, {
+    subject: SUBJECT, topic: TOPIC,
+    preguntas: est.preguntas.map(p => ({ id:p.id, q:p.q, opts:p.opts, correcta:p.correcta, explica:p.explica })),
+    onFin: actualizarEstado,
+  });
+});
+
+/* ---------- examen ---------- */
+renderQuiz(document.getElementById("quizExamen"), {
+  subject: SUBJECT, topic: TOPIC,
+  preguntas: EXAMEN.map(p => ({ id:p.id, q:p.q, opts:p.opts, correcta:p.correcta, explica:p.explica })),
+  examen: true, xpPorPregunta: 8, aprobadoMin: 6/8,
+  onFin: actualizarEstado,
+});
+
+/* ---------- navegación y marcas de completado ---------- */
+const nav = document.getElementById("stationNav");
+ESTACIONES.forEach((est, i) => {
+  const a = ui.el("a", { href: "#" + est.id, id: "nav-" + est.id },
+    `${String(i+1).padStart(2,"0")} · ${est.titulo}`);
+  nav.appendChild(a);
+});
+nav.appendChild(ui.el("a", { href: "#examen" }, "★ Examen"));
+
+function estacionCompleta(est){
+  return est.preguntas.every(p => store.respuestaDe(SUBJECT, TOPIC, p.id)?.correct);
 }
-
-let modoRegistro = false;
-const tabEntrar = document.getElementById("tabEntrar");
-const tabRegistro = document.getElementById("tabRegistro");
-const campoNombre = document.getElementById("campoNombre");
-const boton = document.getElementById("botonEnviar");
-const mensaje = document.getElementById("mensaje");
-const password = document.getElementById("password");
-
-function setModo(registro){
-  modoRegistro = registro;
-  tabEntrar.setAttribute("aria-selected", String(!registro));
-  tabRegistro.setAttribute("aria-selected", String(registro));
-  campoNombre.hidden = !registro;
-  boton.textContent = registro ? "Crear cuenta" : "Entrar";
-  password.setAttribute("autocomplete", registro ? "new-password" : "current-password");
-  mostrar("");
+function actualizarEstado(){
+  ESTACIONES.forEach(est => {
+    const completa = estacionCompleta(est);
+    document.querySelector(`[data-check="${est.id}"]`)?.classList.toggle("done", completa);
+    document.getElementById("nav-" + est.id)?.classList.toggle("done", completa);
+  });
 }
-tabEntrar.addEventListener("click", ()=>setModo(false));
-tabRegistro.addEventListener("click", ()=>setModo(true));
+actualizarEstado();
+store.onCambio(actualizarEstado);
 
-function mostrar(texto, tipo="err"){
-  mensaje.textContent = texto;
-  mensaje.className = "msg " + (texto ? "show " + tipo : "");
-}
+/* ---------- botón "empezar donde lo dejé" ---------- */
+document.getElementById("btnEmpezar").addEventListener("click", () => {
+  const pendiente = ESTACIONES.find(est => !estacionCompleta(est));
+  const destino = pendiente ? document.getElementById(pendiente.id) : document.getElementById("examen");
+  destino.scrollIntoView({ behavior: "smooth", block: "start" });
+});
 
-document.getElementById("formulario").addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  const email = document.getElementById("email").value.trim();
-  const pass = password.value;
-  const nombre = document.getElementById("nombre").value.trim() || email.split("@")[0];
-  boton.disabled = true;
-  boton.textContent = "Un momento…";
-  try{
-    if (modoRegistro){
-      await store.registrarse(email, pass, nombre);
-      mostrar("Cuenta creada. Revisa tu correo si te pide confirmación y después entra con tus datos.", "ok");
-      setModo(false);
-    } else {
-      await store.entrar(email, pass);
-      window.location.href = "index.html";
-    }
-  } catch(err){
-    mostrar(err.message);
-  } finally {
-    boton.disabled = false;
-    boton.textContent = modoRegistro ? "Crear cuenta" : "Entrar";
+/* ======================================================================
+   LABORATORIOS INTERACTIVOS
+====================================================================== */
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+/* ---------- cabecera: secante que se acerca a la tangente ---------- */
+(function(){
+  const cv = document.getElementById("heroCanvas");
+  const ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height;
+  const sinMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const t0v = performance.now();
+  const pad = 30, xMin=-2.3, xMax=2.3, yMin=-0.3, yMax=5.2;
+  const X = x => pad + (x-xMin)/(xMax-xMin)*(W-2*pad);
+  const Y = y => H-pad - (y-yMin)/(yMax-yMin)*(H-2*pad);
+  const f = x => x*x;
+  const x0 = 0.6;
+
+  function frame(now){
+    const t = sinMovimiento ? 0.5 : ((now - t0v)/1000);
+    const h = 1.7 * (0.5 + 0.5*Math.cos(t*0.7)) + 0.02;
+    ctx.fillStyle = cssVar("--scope-bg"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = "rgba(61,220,151,0.09)";
+    for(let x=0;x<W;x+=20){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for(let y=0;y<H;y+=20){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+    ctx.strokeStyle = "rgba(126,224,189,0.55)"; ctx.lineWidth = 1.6; ctx.beginPath();
+    for(let px=0; px<=W; px++){ const x = xMin + px/W*(xMax-xMin); const y=f(x);
+      if(px===0) ctx.moveTo(X(x),Y(y)); else ctx.lineTo(X(x),Y(y)); }
+    ctx.stroke();
+
+    const xh = x0 + h;
+    const m = (f(xh)-f(x0))/h;
+    ctx.strokeStyle = "#ffb454"; ctx.setLineDash([4,4]); ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    const xa = x0-0.6, xb = xh+0.6;
+    ctx.moveTo(X(xa), Y(f(x0)+m*(xa-x0))); ctx.lineTo(X(xb), Y(f(x0)+m*(xb-x0)));
+    ctx.stroke(); ctx.setLineDash([]);
+
+    ctx.fillStyle = "#3ddc97"; ctx.beginPath(); ctx.arc(X(x0),Y(f(x0)),4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#ffb454"; ctx.beginPath(); ctx.arc(X(xh),Y(f(xh)),4,0,Math.PI*2); ctx.fill();
+
+    ctx.fillStyle = "#7fe0bd"; ctx.font = "11px 'JetBrains Mono', monospace"; ctx.textAlign="left";
+    ctx.fillText("m ≈ " + m.toFixed(2), 12, 20);
+    ctx.fillText("h → 0 ⇒ m → 1.2", 12, 36);
+
+    if(!sinMovimiento) requestAnimationFrame(frame);
   }
-});
+  requestAnimationFrame(frame);
+})();
 
-document.getElementById("olvide").addEventListener("click", async ()=>{
-  const email = document.getElementById("email").value.trim();
-  if (!email) return mostrar("Escribe primero tu correo y vuelve a pulsar.");
-  try{
-    await store.recuperarContrasena(email);
-    mostrar("Te he enviado un correo para restablecer la contraseña.", "ok");
-  } catch(err){ mostrar(err.message); }
-});
+/* ---------- 1 · velocidad media y velocidad instantánea (piedra que cae) ---------- */
+(function(){
+  const cv = document.getElementById("cv1"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sT0 = document.getElementById("s1t0"), sH = document.getElementById("s1h");
+  const y = t => 4.9*t*t;
+  const tMax = 3.0, yMax = 4.9*tMax*tMax;
+  const X = t => pad + (t/tMax)*(W-2*pad);
+  const Y = v => H-pad - (v/yMax)*(H-2*pad);
 
-ui.montarPie();
+  function dibujar(){
+    const t0 = +sT0.value;
+    const h = (+sH.value/100) * Math.min(1.8, tMax-t0-0.02) + 0.001;
+    lab1t0.textContent = t0.toFixed(1);
+    lab1h.textContent = h.toFixed(2);
 
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let t=0;t<=tMax;t+=0.5){ ctx.beginPath(); ctx.moveTo(X(t),pad); ctx.lineTo(X(t),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.stroke();
+    ctx.fillStyle = cssVar("--ink-dim"); ctx.font = "11px 'JetBrains Mono', monospace";
+    ctx.fillText("t (s)", W-pad+6, H-pad+4); ctx.fillText("y (m)", pad-30, pad-8);
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    for(let px=0; px<=W-2*pad; px++){ const t = px/(W-2*pad)*tMax; const yy=Y(y(t));
+      if(px===0) ctx.moveTo(X(t),yy); else ctx.lineTo(X(t),yy); }
+    ctx.stroke();
+
+    const t1 = Math.min(tMax, t0+h);
+    const m = (y(t1)-y(t0))/(t1-t0);
+    ctx.strokeStyle = cssVar("--accent-2"); ctx.lineWidth = 2; ctx.setLineDash([5,4]);
+    const ta = Math.max(0,t0-0.4), tb = Math.min(tMax,t1+0.4);
+    ctx.beginPath(); ctx.moveTo(X(ta), Y(y(t0)+m*(ta-t0))); ctx.lineTo(X(tb), Y(y(t0)+m*(tb-t0)));
+    ctx.stroke(); ctx.setLineDash([]);
+
+    [[t0,y(t0),"P"],[t1,y(t1),"Q"]].forEach(([t,yy,lab])=>{
+      ctx.fillStyle = cssVar("--ink"); ctx.beginPath(); ctx.arc(X(t),Y(yy),5,0,Math.PI*2); ctx.fill();
+      ctx.font = "bold 12px 'JetBrains Mono', monospace"; ctx.fillText(lab, X(t)+8, Y(yy)-8);
+    });
+
+    out1m.textContent = m.toFixed(3) + " m/s";
+    out1lim.textContent = (9.8*t0).toFixed(3) + " m/s";
+  }
+  [sT0,sH].forEach(el=>el.addEventListener("input", dibujar));
+  dibujar();
+})();
+
+/* ---------- 2 · el agujero que sí tiene valor ---------- */
+(function(){
+  const cv = document.getElementById("cv2"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sX = document.getElementById("s2x");
+  const xMin=-1, xMax=3, yMin=-1, yMax=4;
+  const X = x => pad + (x-xMin)/(xMax-xMin)*(W-2*pad);
+  const Y = y => H-pad - (y-yMin)/(yMax-yMin)*(H-2*pad);
+  const f = x => x + 1; // simplificación de (x²-1)/(x-1) para x != 1
+
+  function dibujar(){
+    // el slider (0..200) mapea a x en [0, 2], centrado en x=1 (el punto excluido)
+    const s = (+sX.value - 100) / 100; // -1..1
+    let xr = 1 + s;
+    if (Math.abs(xr - 1) < 0.004) xr = xr >= 1 ? 1.004 : 0.996;
+    lab2x.textContent = xr.toFixed(3);
+
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gx=xMin; gx<=xMax; gx++){ ctx.beginPath(); ctx.moveTo(X(gx),pad); ctx.lineTo(X(gx),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(pad,Y(0)); ctx.lineTo(W-pad,Y(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(0),pad); ctx.lineTo(X(0),H-pad); ctx.stroke();
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    ctx.moveTo(X(xMin), Y(f(xMin))); ctx.lineTo(X(xMax), Y(f(xMax)));
+    ctx.stroke();
+    // agujero en x=1
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(X(1), Y(2), 5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = cssVar("--accent-2");
+    ctx.beginPath(); ctx.arc(X(xr), Y(f(xr)), 6, 0, Math.PI*2); ctx.fill();
+    ctx.font = "bold 12px 'JetBrains Mono', monospace"; ctx.fillStyle = cssVar("--ink");
+    ctx.fillText("x", X(xr)+9, Y(f(xr))-9);
+
+    out2f.textContent = f(xr).toFixed(4);
+    out2d.textContent = Math.abs(xr-1).toFixed(4);
+  }
+  sX.addEventListener("input", dibujar);
+  dibujar();
+})();
+
+/* ---------- 3 · fricción cinética y sgn(v) ---------- */
+(function(){
+  const cv = document.getElementById("cv3"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sV = document.getElementById("s3v");
+  const vMin=-50, vMax=50;
+  const X = v => pad + (v-vMin)/(vMax-vMin)*(W-2*pad);
+  const yTop = pad+20, yBot = H-pad-20, yMid = (yTop+yBot)/2;
+
+  function dibujar(){
+    const v = +sV.value;
+    lab3v.textContent = (v/10).toFixed(1);
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let vv=vMin; vv<=vMax; vv+=10){ ctx.beginPath(); ctx.moveTo(X(vv),pad); ctx.lineTo(X(vv),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(pad,yMid); ctx.lineTo(W-pad,yMid); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(0),pad); ctx.lineTo(X(0),H-pad); ctx.stroke();
+    ctx.fillStyle = cssVar("--ink-dim"); ctx.font = "11px 'JetBrains Mono', monospace";
+    ctx.fillText("v (dm/s)", W-pad-50, yMid-8); ctx.fillText("+1", pad-4, yTop-6); ctx.fillText("−1", pad-4, yBot+16);
+
+    // escalón: -1 para v<0, +1 para v>0
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(X(vMin), yBot); ctx.lineTo(X(0)-1.5, yBot); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(0)+1.5, yTop); ctx.lineTo(X(vMax), yTop); ctx.stroke();
+    // círculos abiertos en v=0 (no definido)
+    ctx.strokeStyle = cssVar("--bad"); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(X(0), yBot, 5, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(X(0), yTop, 5, 0, Math.PI*2); ctx.stroke();
+
+    const sgn = v===0 ? 0 : (v>0?1:-1);
+    const marcaY = v===0 ? yMid : (v>0?yTop:yBot);
+    ctx.fillStyle = v===0 ? cssVar("--bad") : cssVar("--accent-2");
+    ctx.beginPath(); ctx.arc(X(v), marcaY, 6, 0, Math.PI*2); ctx.fill();
+
+    out3sgn.textContent = v===0 ? "indefinido" : String(sgn);
+    out3sgn.className = "v " + (v===0 ? "bad" : "good");
+    out3f.textContent = v===0 ? "indefinida" : (-sgn).toFixed(0) + " (sentido opuesto a v)";
+  }
+  sV.addEventListener("input", dibujar);
+  dibujar();
+})();
+
+/* ---------- 4 · velocidad terminal / límites en el infinito ---------- */
+(function(){
+  const cv = document.getElementById("cv4"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sX = document.getElementById("s4x");
+  const f = x => x/Math.sqrt(x*x+1);
+  const xMax = 40;
+  const X = x => pad + (x+xMax)/(2*xMax)*(W-2*pad);
+  const Y = y => H/2 - y*((H-2*pad)/2.4);
+
+  function dibujar(){
+    const x = (+sX.value)/10;
+    lab4x.textContent = x.toFixed(1);
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gx=-xMax; gx<=xMax; gx+=10){ ctx.beginPath(); ctx.moveTo(X(gx),pad); ctx.lineTo(X(gx),H-pad); ctx.stroke(); }
+    // asíntotas
+    ctx.strokeStyle = cssVar("--accent-2"); ctx.setLineDash([5,4]); ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(pad,Y(1)); ctx.lineTo(W-pad,Y(1)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad,Y(-1)); ctx.lineTo(W-pad,Y(-1)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = cssVar("--accent-2"); ctx.font = "11px 'JetBrains Mono', monospace";
+    ctx.fillText("y = 1", W-pad-40, Y(1)-6); ctx.fillText("y = −1", W-pad-46, Y(-1)+16);
+
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(pad,Y(0)); ctx.lineTo(W-pad,Y(0)); ctx.stroke();
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    for(let px=0; px<=W-2*pad; px++){ const xx = -xMax + px/(W-2*pad)*2*xMax; const yy=Y(f(xx));
+      if(px===0) ctx.moveTo(X(xx),yy); else ctx.lineTo(X(xx),yy); }
+    ctx.stroke();
+
+    ctx.fillStyle = cssVar("--ink");
+    ctx.beginPath(); ctx.arc(X(x), Y(f(x)), 6, 0, Math.PI*2); ctx.fill();
+
+    out4f.textContent = f(x).toFixed(5);
+    out4asym.textContent = x >= 0 ? "y = 1 (por la derecha)" : "y = −1 (por la izquierda)";
+  }
+  sX.addEventListener("input", dibujar);
+  dibujar();
+})();
+
+/* ---------- 5 · campo de Coulomb, límite infinito ---------- */
+(function(){
+  const cv = document.getElementById("cv5"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sR = document.getElementById("s5r");
+  const rMax = 3, eCap = 30;
+  const X = r => pad + (r/rMax)*(W-2*pad);
+  const Y = e => H-pad - (Math.min(e,eCap)/eCap)*(H-2*pad);
+
+  function dibujar(){
+    const r = (+sR.value)/100;
+    lab5r.textContent = r.toFixed(2);
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gr=0; gr<=rMax; gr+=0.5){ ctx.beginPath(); ctx.moveTo(X(gr),pad); ctx.lineTo(X(gr),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--bad"); ctx.setLineDash([4,4]); ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(X(0),pad); ctx.lineTo(X(0),H-pad); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = cssVar("--bad"); ctx.font = "11px 'JetBrains Mono', monospace";
+    ctx.fillText("r = 0 (asíntota)", X(0)+6, pad+14);
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    let started = false;
+    for(let px=0; px<=W-2*pad; px++){ const rr = px/(W-2*pad)*rMax; if(rr<0.03) continue;
+      const e = 1/(rr*rr); const yy=Y(e);
+      if(!started){ ctx.moveTo(X(rr),yy); started=true; } else ctx.lineTo(X(rr),yy); }
+    ctx.stroke();
+
+    const e = 1/(r*r);
+    ctx.fillStyle = cssVar("--accent-2");
+    ctx.beginPath(); ctx.arc(X(r), Y(e), 6, 0, Math.PI*2); ctx.fill();
+
+    out5e.textContent = e > 9999 ? "≫ 1 (dispara)" : e.toFixed(1);
+  }
+  sR.addEventListener("input", dibujar);
+  dibujar();
+})();
+
+/* ---------- 6 · continuidad: interruptor y difracción ---------- */
+(function(){
+  const cv = document.getElementById("cv6"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const sel = document.getElementById("s6fn");
+  const ctrlExtend = document.getElementById("ctrl6extend");
+  const chkExtend = document.getElementById("s6extend");
+
+  function dibujarHeaviside(){
+    const xMin=-3, xMax=3, yMin=-0.3, yMax=1.4;
+    const X = x => pad + (x-xMin)/(xMax-xMin)*(W-2*pad);
+    const Y = y => H-pad - (y-yMin)/(yMax-yMin)*(H-2*pad);
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gx=xMin; gx<=xMax; gx++){ ctx.beginPath(); ctx.moveTo(X(gx),pad); ctx.lineTo(X(gx),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(pad,Y(0)); ctx.lineTo(W-pad,Y(0)); ctx.stroke();
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(X(xMin), Y(0)); ctx.lineTo(X(0), Y(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(X(0), Y(1)); ctx.lineTo(X(xMax), Y(1)); ctx.stroke();
+    ctx.fillStyle = cssVar("--accent"); ctx.beginPath(); ctx.arc(X(0),Y(1),5,0,Math.PI*2); ctx.fill(); // relleno: continua por la derecha
+    ctx.strokeStyle = cssVar("--bad"); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(X(0),Y(0),5,0,Math.PI*2); ctx.stroke(); // hueco: no continua por la izquierda
+
+    ctx.fillStyle = cssVar("--ink-dim"); ctx.font = "11px 'JetBrains Mono', monospace";
+    ctx.fillText("interruptor: apagado (t<0) → encendido (t≥0)", pad, pad-14);
+
+    out6tipo.textContent = "Salto (no evitable)";
+    out6cont.textContent = "Continua por la derecha en 0; discontinua en 0";
+    out6cont.className = "v bad";
+  }
+
+  function dibujarSinc(){
+    const xMin=-10, xMax=10, yMin=-0.3, yMax=1.15;
+    const X = x => pad + (x-xMin)/(xMax-xMin)*(W-2*pad);
+    const Y = y => H-pad - (y-yMin)/(yMax-yMin)*(H-2*pad);
+    const f = x => x===0 ? 1 : Math.sin(x)/x;
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gx=xMin; gx<=xMax; gx+=2){ ctx.beginPath(); ctx.moveTo(X(gx),pad); ctx.lineTo(X(gx),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(pad,Y(0)); ctx.lineTo(W-pad,Y(0)); ctx.stroke();
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    for(let px=0; px<=W-2*pad; px++){ const x = xMin + px/(W-2*pad)*(xMax-xMin); if(Math.abs(x)<0.03) continue;
+      const yy=Y(f(x)); if(px===0) ctx.moveTo(X(x),yy); else ctx.lineTo(X(x),yy); }
+    ctx.stroke();
+
+    const relleno = chkExtend.checked;
+    if(relleno){
+      ctx.fillStyle = cssVar("--good");
+      ctx.beginPath(); ctx.arc(X(0),Y(1),5,0,Math.PI*2); ctx.fill();
+    } else {
+      ctx.strokeStyle = cssVar("--bad"); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(X(0),Y(1),5,0,Math.PI*2); ctx.stroke();
+    }
+
+    out6tipo.textContent = "Evitable (el límite en 0 existe: vale 1)";
+    out6cont.textContent = relleno ? "Sí — F(0)=1 la hace continua" : "No — falta definir F(0)=1";
+    out6cont.className = "v " + (relleno ? "good" : "bad");
+  }
+
+  function dibujar(){
+    if(sel.value==="heaviside"){ ctrlExtend.hidden = true; dibujarHeaviside(); }
+    else { ctrlExtend.hidden = false; dibujarSinc(); }
+  }
+  sel.addEventListener("change", dibujar);
+  chkExtend.addEventListener("change", dibujar);
+  dibujar();
+})();
+
+/* ---------- 7 · bisección ---------- */
+(function(){
+  const cv = document.getElementById("cv7"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, pad = 44;
+  const f = x => x*x*x - x - 1;
+  let a = 1, b = 2, iter = 0;
+  const xMin=0.8, xMax=2.1, yMin=-1.5, yMax=5.5;
+  const X = x => pad + (x-xMin)/(xMax-xMin)*(W-2*pad);
+  const Y = y => H-pad - (y-yMin)/(yMax-yMin)*(H-2*pad);
+
+  function dibujar(){
+    ctx.fillStyle = cssVar("--bg-elev"); ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = cssVar("--grid"); ctx.lineWidth = 1;
+    for(let gx=1; gx<=2; gx+=0.1){ ctx.beginPath(); ctx.moveTo(X(gx),pad); ctx.lineTo(X(gx),H-pad); ctx.stroke(); }
+    ctx.strokeStyle = cssVar("--ink-dim"); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(pad,Y(0)); ctx.lineTo(W-pad,Y(0)); ctx.stroke();
+
+    ctx.strokeStyle = cssVar("--accent"); ctx.lineWidth = 2.2; ctx.beginPath();
+    for(let px=0; px<=W-2*pad; px++){ const x = xMin + px/(W-2*pad)*(xMax-xMin); const yy=Y(f(x));
+      if(px===0) ctx.moveTo(X(x),yy); else ctx.lineTo(X(x),yy); }
+    ctx.stroke();
+
+    // intervalo actual resaltado
+    ctx.fillStyle = cssVar("--accent-soft");
+    ctx.fillRect(X(a), pad, X(b)-X(a), H-2*pad);
+
+    const m = (a+b)/2;
+    [[a,"a"],[b,"b"],[m,"m"]].forEach(([x,lab])=>{
+      ctx.strokeStyle = lab==="m" ? cssVar("--accent-2") : cssVar("--ink-dim");
+      ctx.lineWidth = lab==="m" ? 2.2 : 1.4;
+      ctx.beginPath(); ctx.moveTo(X(x),pad); ctx.lineTo(X(x),H-pad); ctx.stroke();
+      ctx.fillStyle = ctx.strokeStyle; ctx.font = "bold 11px 'JetBrains Mono', monospace";
+      ctx.fillText(lab, X(x)-3, pad-6);
+    });
+
+    out7iter.textContent = String(iter);
+    out7int.textContent = `[${a.toFixed(4)}, ${b.toFixed(4)}]`;
+    out7mid.textContent = m.toFixed(4);
+    out7fmid.textContent = f(m).toFixed(4);
+  }
+
+  document.getElementById("btn7step").addEventListener("click", ()=>{
+    const m = (a+b)/2;
+    if (f(a)*f(m) < 0) b = m; else a = m;
+    iter++;
+    dibujar();
+  });
+  document.getElementById("btn7reset").addEventListener("click", ()=>{
+    a=1; b=2; iter=0; dibujar();
+  });
+  dibujar();
+})();
 </script>
 </body>
 </html>
